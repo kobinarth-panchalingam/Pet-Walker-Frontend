@@ -1,15 +1,22 @@
-import type { CodegenConfig } from '@graphql-codegen/cli';
+import { CodegenConfig } from '@graphql-codegen/cli';
+import dotenv from 'dotenv';
+
+dotenv.config( {
+	path: '.env.development'
+} );
 
 const config: CodegenConfig = {
-	schema: 'http://localhost:4000',
-	documents: [ 'src/**/*.tsx' ],
+	schema: `${process.env.VITE_GRAPHQL_API_URL}`,
+	documents: [ 'src/graphql/*.ts' ],
 	generates: {
-		'./src/__generated__/': {
+		'./src/graphql/__generated__/': {
 			preset: 'client',
 			presetConfig: {
 				gqlTagName: 'gql'
 			}
 		}
 	},
-	ignoreNoDocuments: true
+	ignoreNoDocuments: false
 };
+
+export default config;
