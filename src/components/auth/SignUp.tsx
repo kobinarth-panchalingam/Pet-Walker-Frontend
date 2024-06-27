@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { signIn } from '@api';
-import { HOME, SIGN_UP } from '@constants/routes';
+import { signUp } from '@api';
+import { HOME, SIGN_IN } from '@constants/routes';
 import { useAuth } from '@contexts/AuthContext';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
-import { SignInData } from '@types';
+import { SignUpData } from '@types';
 import { RESTErrorHandler } from '@utils';
 
-const SignIn: React.FC = () => {
-	const [ data, setData ] = useState<SignInData>( { email: '', password: '' } );
+const SignUp: React.FC = () => {
+	const [ data, setData ] = useState<SignUpData>( {
+		email: '',
+		password: '',
+		firstName: '',
+		lastName: '',
+		role: 'OWNER'
+	} );
 	const { login } = useAuth();
 	const navigate = useNavigate();
 
 	const handleSubmit = async( event: React.FormEvent ) => {
 		event.preventDefault();
 		try {
-			const res = await signIn( data );
+			const res = await signUp( data );
 			login( res.data.token );
 			navigate( HOME );
 		} catch ( error ) {
@@ -29,7 +35,7 @@ const SignIn: React.FC = () => {
 			<div className="row justify-content-center w-100">
 				<div className="col-12 col-md-8 col-lg-4">
 					<div className="card p-4">
-						<h2 className="text-center mb-4">Sign In</h2>
+						<h2 className="text-center mb-4">Sign Up</h2>
 						<form onSubmit={handleSubmit}>
 							<JsonForms
 								schema={schema}
@@ -39,16 +45,13 @@ const SignIn: React.FC = () => {
 								cells={materialCells}
 								onChange={( { data } ) => setData( data )}
 							/>
-							<div className="mt-2 mb-3 text-start">
-								<a href="#" className="text-decoration-none">Forgot Password?</a>
-							</div>
-							<div className="mt-2 mb-4">
-								<button type="submit" className="btn btn-primary w-100">Sign In</button>
+							<div className="mt-2 mb-4   ">
+								<button type="submit" className="btn btn-primary w-100">Sign Up</button>
 							</div>
 							<hr className="my-3" />
 							<div className="mt-2">
-								<span>Don't have an account? </span>
-								<NavLink to={SIGN_UP} className="text-decoration-none">Sign Up</NavLink>
+								<span>Already have an account? </span>
+								<NavLink to={SIGN_IN} className="text-decoration-none">Sign In</NavLink>
 							</div>
 						</form>
 					</div>
@@ -61,34 +64,23 @@ const SignIn: React.FC = () => {
 const schema = {
 	type: 'object',
 	properties: {
-		email: {
-			type: 'string',
-			format: 'email',
-			title: 'Email'
-		},
-		password: {
-			type: 'string',
-			title: 'Password'
-		}
+		firstName: { type: 'string', title: 'First Name' },
+		lastName: { type: 'string', title: 'Last Name' },
+		email: { type: 'string', format: 'email', title: 'Email' },
+		password: { type: 'string', title: 'Password', minLength: 8 }
 	},
-	required: [ 'email', 'password' ]
+	required: [ 'firstName', 'lastName', 'email', 'password' ]
 };
 
 const uischema = {
 	type: 'VerticalLayout',
 	elements: [
-		{
-			type: 'Control',
-			scope: '#/properties/email'
-		},
-		{
-			type: 'Control',
-			scope: '#/properties/password',
-			options: {
-				format: 'password'
-			}
-		}
+		{ type: 'Control', scope: '#/properties/firstName' },
+		{ type: 'Control', scope: '#/properties/lastName' },
+		{ type: 'Control', scope: '#/properties/email' },
+		{ type: 'Control', scope: '#/properties/password', options: { format: 'password' } }
 	]
 };
 
-export { SignIn };
+export { SignUp };
+
