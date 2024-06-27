@@ -7,9 +7,9 @@ dotenv.config( {
 
 const config: CodegenConfig = {
 	schema: `${process.env.VITE_GRAPHQL_API_URL}`,
-	documents: [ 'src/graphql/*.ts' ],
+	documents: [ 'src/api/graphql/*.ts' ],
 	generates: {
-		'./src/graphql/__generated__/': {
+		'./src/api/graphql/__generated__/': {
 			preset: 'client',
 			presetConfig: {
 				gqlTagName: 'gql'
