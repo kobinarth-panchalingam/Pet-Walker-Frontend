@@ -17,10 +17,29 @@
     "noEmit": true,
     "jsx": "react-jsx",
     /* Linting */
+    "noImplicitAny": false,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": "./",
+    "paths": {
+      "@types": [
+        "src/types"
+      ],
+      "@api": [
+        "src/api"
+      ],
+      "@utils": [
+        "src/utils"
+      ],
+      "@constants/*": [
+        "src/constants/*"
+      ],
+      "@contexts/*": [
+        "src/contexts/*"
+      ],
+    }
   },
   "include": [
     "src"
