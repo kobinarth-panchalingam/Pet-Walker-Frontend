@@ -83,4 +83,3 @@ const uischema = {
 };
 
 export { SignUp };
-

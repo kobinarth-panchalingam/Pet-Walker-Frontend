@@ -14,7 +14,7 @@ ReactDOM.createRoot( document.getElementById( 'root' )! ).render(
 		<ApolloProvider client={apolloClient}>
 			<AuthProvider>
 				<App />
-				<ToastContainer/>
+				<ToastContainer className="toast-container"  position="top-right" />
 			</AuthProvider>
 		</ApolloProvider>
 	</React.StrictMode>
