@@ -49,33 +49,33 @@ hr {
       color: darken($primary-color, 10%);
     }
   }
-
-  .nav-link {
-    color: $text-color;
-    position: relative;
-    padding-left: 10px; 
-    padding-right: 10px;
-
-    &:after {
-      content: '';
-      position: absolute;
-      left: 50%;
-      bottom: 0.0em;
-      width: 0;
-      height: 1.5px;
-      background-color: darken($text-color, 20%);
-      transition: width 0.3s ease, left 0.3s ease;
-    }
-
-    &:hover:after {
-      width: calc(100% - 20px);
-      left: 10px;
-    }
-  }
-
-  .dropdown .nav-link {
-    &:after {
-      display: none; /* Hide underline in dropdown links */
-    }
-  }
 }
+
+  // .nav-link {
+  //   color: $text-color;
+  //   position: relative;
+  //   padding-left: 10px; 
+  //   padding-right: 10px;
+
+  //   &:after {
+  //     content: '';
+  //     position: absolute;
+  //     left: 50%;
+  //     bottom: 0.0em;
+  //     width: 0;
+  //     height: 1.5px;
+  //     background-color: darken($text-color, 20%);
+  //     transition: width 0.3s ease, left 0.3s ease;
+  //   }
+
+  //   &:hover:after {
+  //     width: calc(100% - 20px);
+  //     left: 10px;
+  //   }
+  // }
+
+  // .dropdown .nav-link {
+  //   &:after {
+  //     display: none; /* Hide underline in dropdown links */
+  //   }
+  // }

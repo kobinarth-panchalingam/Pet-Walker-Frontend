@@ -14,7 +14,7 @@ const AuthContext = createContext<AuthState>( {
 	isAuthenticated: false,
 	user: null,
 	token: null,
-	login: ( token: string ) => {},
+	login: () => {},
 	logout: () => {}
 } );
 
