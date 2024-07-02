@@ -11,8 +11,8 @@ export const Navbar: React.FC = () => {
 		linksContainerRef.current?.classList.remove( 'show' );
 	};
 
-	const handleLogout = async() => {
-		await logout();
+	const handleLogout = () => {
+		logout();
 	};
 
 	const renderLink = ( link: any, index: number ) => {
@@ -98,7 +98,7 @@ export const Navbar: React.FC = () => {
 					id="navbar-content"
 					ref={linksContainerRef}
 					className="collapse navbar-collapse text-start">
-					<ul className="navbar-nav mr-auto mb-2 mb-lg-0">
+					<ul className="navbar-nav mr-auto">
 						{renderLinks( leftNavLinks )}
 					</ul>
 					<ul className="navbar-nav ms-auto">

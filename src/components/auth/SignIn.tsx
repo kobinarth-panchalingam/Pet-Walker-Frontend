@@ -3,10 +3,10 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { signIn } from '@api';
 import { HOME, SIGN_UP } from '@constants/routes';
 import { useAuth } from '@contexts/AuthContext';
-import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
-import { JsonForms } from '@jsonforms/react';
 import { SignInData } from '@types';
 import { RESTErrorHandler } from '@utils';
+
+import { CustomJsonForms } from '../common/CustomJsonForms';
 
 const SignIn: React.FC = () => {
 	const [ data, setData ] = useState<SignInData>( { email: '', password: '' } );
@@ -25,18 +25,16 @@ const SignIn: React.FC = () => {
 	};
 
 	return (
-		<div className="container vh-100 d-flex justify-content-center align-items-center">
+		<div className="vh-100 d-flex justify-content-center align-items-center">
 			<div className="row justify-content-center w-100">
 				<div className="col-12 col-md-8 col-lg-4">
 					<div className="card p-4">
 						<h2 className="text-center mb-4">Sign In</h2>
 						<form onSubmit={handleSubmit}>
-							<JsonForms
+							<CustomJsonForms
 								schema={schema}
 								uischema={uischema}
 								data={data}
-								renderers={materialRenderers}
-								cells={materialCells}
 								onChange={( { data } ) => setData( data )}
 							/>
 							<div className="mt-2 mb-3 text-start">
@@ -92,3 +90,4 @@ const uischema = {
 };
 
 export { SignIn };
+

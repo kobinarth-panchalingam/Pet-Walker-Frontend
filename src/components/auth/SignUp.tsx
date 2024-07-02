@@ -31,7 +31,7 @@ const SignUp: React.FC = () => {
 	};
 
 	return (
-		<div className="container vh-100 d-flex justify-content-center align-items-center">
+		<div className="vh-100 d-flex justify-content-center align-items-center">
 			<div className="row justify-content-center w-100">
 				<div className="col-12 col-md-8 col-lg-4">
 					<div className="card p-4">
