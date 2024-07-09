@@ -1,0 +1,25 @@
+@import '../variables.module.scss'; // Import your custom variables first
+
+// Override theme color variables
+$theme-colors: (
+    "primary": $primary-color,
+    "secondary": $secondary-color,
+    "success": $success-color,
+    "info": $info-color,
+    "warning": $warning-color,
+    "danger": $error-color,
+    "light": $light-color,
+    "dark": $dark-color
+);
+
+// Optionally, you can also override individual color variables
+$primary: $primary-color;
+$secondary: $secondary-color;
+$success: $success-color;
+$info: $info-color;
+$warning: $warning-color;
+$danger: $error-color;
+$light: $light-color;
+$dark: $dark-color;
+
+@import "../../../../node_modules/bootstrap/scss/bootstrap"; // Import Bootstrap after your custom overrides

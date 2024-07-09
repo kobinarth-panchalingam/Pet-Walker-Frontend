@@ -1,0 +1,48 @@
+// $primary-color: #FFA726;
+// $secondary-color: #4CAF50;
+// $accent-color: #FF7043;
+// $background-color: #e8e8e8;
+// $text-color: #212121;
+// $success-color: #66BB6A;
+// $error-color: #EF5350;
+// $border-color: #5f5858;
+
+// $primary-color: #5A8D95;
+// $secondary-color: #A8D5BA;
+// $error-color: #E57373;
+// $warning-color: #FFB74D;
+// $info-color: #64B5F6;
+// $success-color: #81C784;
+// $light-color: #F5F5F5;
+// $dark-color: #424242;
+// $text-color: #333333;
+// $background-color: #FFFFFF;
+// $accent-color: #FFD700;
+// $border-color: #DDDDDD;
+
+$primary-color: #3F51B5;
+$secondary-color: #4CAF50;
+$error-color: #F44336;
+$warning-color: #FF9800;
+$info-color: #2196F3;
+$success-color: #8BC34A;
+$light-color: #F5F5F5;
+$dark-color: #212121;
+$text-color: #555555;
+$background-color: #EEEEEE;
+$accent-color: #FFC107;
+$border-color: #CCCCCC;
+
+
+:export {
+    primaryColor: $primary-color;
+    secondaryColor: $secondary-color;
+    errorColor: $error-color;
+    warningColor: $warning-color;
+    infoColor: $info-color;
+    successColor: $success-color;
+    textColor: $text-color;
+    backgroundColor: $background-color;
+    accentColor: $accent-color;
+    borderColor: $border-color;
+}

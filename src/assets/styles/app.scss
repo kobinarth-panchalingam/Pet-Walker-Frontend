@@ -1,8 +1,7 @@
-@import 'variables';
-@import "bootstrap/scss/bootstrap";
+@import 'variables.module';
 
 body {
-  background-color: $background-color;
+  background-color: $primary-color;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -32,22 +31,25 @@ body {
 
 .btn-primary {
   background-color: $primary-color;
-  border-color: $primary-color;
+  color: #fff; // Assuming white text for the filled primary button
+  border: 1px solid $primary-color;
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+    border-color: darken($primary-color, 10%);
+  }
 }
 
-.btn-primary:hover {
-  background-color: darken($primary-color, 10%);
-  border-color: darken($primary-color, 10%);
-}
+.btn-secondary {
+  background-color: transparent;
+  color: $primary-color; // Text color matches the primary color
+  border: 1px solid $primary-color;
 
-.btn-success {
-  background-color: $success-color;
-  border-color: $success-color;
-}
-
-.btn-error {
-  background-color: $error-color;
-  border-color: $error-color;
+  &:hover {
+    background-color: $primary-color; // Fills the button on hover
+    color: #fff; // Text color changes to white (or any contrasting color)
+    border-color: $primary-color;
+  }
 }
 
 hr {
@@ -57,6 +59,7 @@ hr {
 .navbar {
   .navbar-brand {
     color: $primary-color;
+
     &:hover {
       color: darken($primary-color, 10%);
     }

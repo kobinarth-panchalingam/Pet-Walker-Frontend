@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { CONTACT, HOME, SIGN_IN, SIGN_UP } from '@constants/routes';
+import { Link, useNavigate } from 'react-router-dom';
+import { CONTACT, HOME, PETS, PROFILE, SIGN_IN, SIGN_UP } from '@constants/routes';
 import { useAuth } from '@contexts/AuthContext';
 
 export const Navbar: React.FC = () => {
 	const { isAuthenticated, logout, user } = useAuth();
 	const linksContainerRef = useRef<HTMLDivElement | null>( null );
+	const navigate = useNavigate();
 
 	const handleNavCollapse = () => {
 		linksContainerRef.current?.classList.remove( 'show' );
@@ -13,6 +14,7 @@ export const Navbar: React.FC = () => {
 
 	const handleLogout = () => {
 		logout();
+		navigate( HOME );
 	};
 
 	const renderLink = ( link: any, index: number ) => {
@@ -73,8 +75,9 @@ export const Navbar: React.FC = () => {
 			to: '',
 			text: user?.firstName || 'User',
 			children: [
-				{ to: 'PROFILE', text: 'Profile' },
-				{ to: '', text: 'Logout', action: handleLogout }
+				{ to: PROFILE, text: 'Profile', protected: true },
+				{ to: PETS, text: 'Your Pets', protected: true },
+				{ to: HOME, text: 'Logout', action: handleLogout, protected: true }
 			],
 			protected: true
 		}

@@ -58,6 +58,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ( { children } ) => {
 		setToken( null );
 		setUser( null );
 		setIsAuthenticated( false );
+
 	};
 
 	// Provide the context value to children components
