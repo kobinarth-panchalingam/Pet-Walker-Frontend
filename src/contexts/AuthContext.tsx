@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { User } from '@types';
 import { parseToken, SessionStorage, StorageManager } from '@utils';
 
@@ -22,7 +22,7 @@ interface AuthProviderProps {
 	children: React.ReactNode;
   }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ( { children } ) => {
+const AuthProvider: React.FC<AuthProviderProps> = ( { children } ) => {
 	const [ isAuthenticated, setIsAuthenticated ] = useState<boolean>( false );
 	const [ user, setUser ] = useState<User | null>( null );
 	const [ token, setToken ] = useState<string | null>( null );
@@ -77,5 +77,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ( { children } ) => {
 	);
 };
 
-// Custom hook to consume AuthContext
-export const useAuth = () => useContext( AuthContext );
+export { AuthContext, AuthProvider };

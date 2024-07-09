@@ -1,78 +1,59 @@
-import React, { useEffect, useState } from 'react';
-// import { fetchUserProfile, updateUserProfile } from '@api'; // These are placeholder API calls
+import React, { useState } from 'react';
+import { useAuth } from '@hooks/UseAuth';
+import useJsonForms from '@hooks/UseJsonForms';
 import { RESTErrorHandler } from '@utils';
 
-import { CustomJsonForms } from '../common/CustomJsonForms';
 
 const Profile: React.FC = () => {
-	// const { user, login } = useAuth();
-	const [ data, setData ] = useState( null );
-	const [ isEditing, setIsEditing ] = useState( false );
-
-	useEffect( () => {
-		// Fetch user profile data when component mounts
-		const fetchData = async() => {
-			try {
-				// const response = await fetchUserProfile();
-				// setData( response.data );
-			} catch ( error ) {
-				RESTErrorHandler( error );
-			}
-		};
-		fetchData();
-	}, [] );
+	const [ editMode, setEditMode ] = useState( false );
+	const { user } = useAuth();
+	const data = {
+		basicInfo: {
+			firstName: user?.firstName,
+			lastName: user?.lastName,
+			email: user?.email
+		}
+	};
+	const { Form, formData, errors, isFormValid } = useJsonForms( { schema, uischema, data, readonly: !editMode } );
 
 	const handleSubmit = async( event: React.FormEvent ) => {
 		event.preventDefault();
 		try {
-			// const response = await updateUserProfile( data );
-			// login( response.data.token ); // Update token if necessary
-			setIsEditing( false );
+			console.log( formData );
+			console.log( errors );
 		} catch ( error ) {
 			RESTErrorHandler( error );
 		}
 	};
-
-	if ( data ) {
-		return <div>Loading...</div>;
-	}
 
 	return (
 		<div className="container vh-100 d-flex justify-content-center align-items-center">
 			<div className="row justify-content-center w-100">
 				<div className="col-12 col-md-8 col-lg-6">
 					<div className="card p-4">
-						{isEditing ?
-							<form onSubmit={handleSubmit}>
-								<CustomJsonForms
-									schema={schema}
-									uischema={uischema}
-									data={data}
-									onChange={( { data } ) => setData( data )}
-								/>
-								<div className="d-flex justify-content-end gap-2 mt-2 mb-4"> {/* Adjusted for alignment and spacing */}
+						<form onSubmit={handleSubmit}>
+							{Form}
+							<div className="d-flex justify-content-end gap-2 mt-2 mb-4"> {/* Adjusted for alignment and spacing */}
+								{editMode ?
+									<>
+										<button
+											type="button"
+											className="btn btn-secondary"
+											onClick={() => setEditMode( false )}
+										>
+									Cancel
+										</button>
+										<button type="submit" className="btn btn-primary" disabled={!isFormValid}>Save</button>
+									</> :
 									<button
 										type="button"
-										className="btn btn-secondary"
-										onClick={() => setIsEditing( false )}
+										className="btn btn-primary"
+										onClick={() => setEditMode( true )}
 									>
-									Cancel
-									</button>
-									<button type="submit" className="btn btn-primary">Save</button>
-								</div>
-							</form>
-							:
-							<div>
-								<pre>{JSON.stringify( data, null, 2 )}</pre>
-								<button
-									type="button"
-									className="btn btn-primary w-100 mt-4"
-									onClick={() => setIsEditing( true )}
-								>
-                                    Edit Profile
-								</button>
+									Edit
+									</button>}
 							</div>
-						}
+						</form>
 					</div>
 				</div>
 			</div>

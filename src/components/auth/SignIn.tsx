@@ -1,22 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { signIn } from '@api';
 import { HOME, SIGN_UP } from '@constants/routes';
-import { useAuth } from '@contexts/AuthContext';
+import { useAuth } from '@hooks/UseAuth';
+import useJsonForms from '@hooks/UseJsonForms';
 import { SignInData } from '@types';
 import { RESTErrorHandler } from '@utils';
 
-import { CustomJsonForms } from '../common/CustomJsonForms';
-
 const SignIn: React.FC = () => {
-	const [ data, setData ] = useState<SignInData>( { email: '', password: '' } );
 	const { login } = useAuth();
 	const navigate = useNavigate();
+	const { Form, formData, isFormValid } = useJsonForms( { schema, uischema, data } );
 
 	const handleSubmit = async( event: React.FormEvent ) => {
 		event.preventDefault();
 		try {
-			const res = await signIn( data );
+			const res = await signIn( formData );
 			login( res.data.token );
 			navigate( HOME );
 		} catch ( error ) {
@@ -31,17 +30,12 @@ const SignIn: React.FC = () => {
 					<div className="card p-4">
 						<h2 className="text-center mb-4">Sign In</h2>
 						<form onSubmit={handleSubmit}>
-							<CustomJsonForms
-								schema={schema}
-								uischema={uischema}
-								data={data}
-								onChange={( { data } ) => setData( data )}
-							/>
+							{Form}
 							<div className="mt-2 mb-3 text-start">
 								<a href="#" className="text-decoration-none">Forgot Password?</a>
 							</div>
 							<div className="mt-2 mb-4">
-								<button type="submit" className="btn btn-primary w-100">Sign In</button>
+								<button type="submit" className="btn btn-primary w-100" disabled={!isFormValid}>Sign In</button>
 							</div>
 							<hr className="my-3" />
 							<div className="mt-2">
@@ -56,6 +50,11 @@ const SignIn: React.FC = () => {
 	);
 };
 
+const data: SignInData = {
+	email: '',
+	password: ''
+};
+
 const schema = {
 	type: 'object',
 	properties: {
@@ -66,7 +65,8 @@ const schema = {
 		},
 		password: {
 			type: 'string',
-			title: 'Password'
+			title: 'Password',
+			minLength: 3 //todo: change to 8
 		}
 	},
 	required: [ 'email', 'password' ]

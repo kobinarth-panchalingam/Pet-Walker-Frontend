@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CONTACT, HOME, PETS, PROFILE, SIGN_IN, SIGN_UP } from '@constants/routes';
-import { useAuth } from '@contexts/AuthContext';
+import { useAuth } from '@hooks/UseAuth';
 
 export const Navbar: React.FC = () => {
 	const { isAuthenticated, logout, user } = useAuth();

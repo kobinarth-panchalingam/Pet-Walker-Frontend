@@ -1,28 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { signUp } from '@api';
 import { HOME, SIGN_IN } from '@constants/routes';
-import { useAuth } from '@contexts/AuthContext';
-import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
-import { JsonForms } from '@jsonforms/react';
+import { useAuth } from '@hooks/UseAuth';
+import useJsonForms from '@hooks/UseJsonForms';
 import { SignUpData } from '@types';
 import { RESTErrorHandler } from '@utils';
 
 const SignUp: React.FC = () => {
-	const [ data, setData ] = useState<SignUpData>( {
-		email: '',
-		password: '',
-		firstName: '',
-		lastName: '',
-		role: 'OWNER'
-	} );
+	const { Form, formData, errors, isFormValid } = useJsonForms( { schema, uischema, data } );
 	const { login } = useAuth();
 	const navigate = useNavigate();
 
 	const handleSubmit = async( event: React.FormEvent ) => {
+		console.log( errors );
+		console.log( formData );
 		event.preventDefault();
 		try {
-			const res = await signUp( data );
+			const res = await signUp( formData );
 			login( res.data.token );
 			navigate( HOME );
 		} catch ( error ) {
@@ -37,16 +32,9 @@ const SignUp: React.FC = () => {
 					<div className="card p-4">
 						<h2 className="text-center mb-4">Sign Up</h2>
 						<form onSubmit={handleSubmit}>
-							<JsonForms
-								schema={schema}
-								uischema={uischema}
-								data={data}
-								renderers={materialRenderers}
-								cells={materialCells}
-								onChange={( { data } ) => setData( data )}
-							/>
+							{Form}
 							<div className="mt-2 mb-4   ">
-								<button type="submit" className="btn btn-primary w-100">Sign Up</button>
+								<button type="submit" className="btn btn-primary w-100" disabled={!isFormValid}>Sign Up</button>
 							</div>
 							<hr className="my-3" />
 							<div className="mt-2">
@@ -61,10 +49,18 @@ const SignUp: React.FC = () => {
 	);
 };
 
+const data: SignUpData = {
+	firstName: '',
+	lastName: '',
+	email: '',
+	password: '',
+	role: 'OWNER'
+};
+
 const schema = {
 	type: 'object',
 	properties: {
-		firstName: { type: 'string', title: 'First Name' },
+		firstName: { type: 'string', title: 'First Name', minLength: 1 },
 		lastName: { type: 'string', title: 'Last Name' },
 		email: { type: 'string', format: 'email', title: 'Email' },
 		password: { type: 'string', title: 'Password', minLength: 8 }
@@ -83,3 +79,4 @@ const uischema = {
 };
 
 export { SignUp };
+
