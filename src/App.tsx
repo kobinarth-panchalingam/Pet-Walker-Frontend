@@ -6,20 +6,19 @@ import { SignIn } from './components/auth/SignIn';
 import { SignUp } from './components/auth/SignUp';
 import { Navbar } from './components/common/NavBar';
 import { Profile } from './components/user/Profile';
-
-import './assets/styles/app.scss';
-
 interface AuthRouteProps {
 	element: React.ElementType;
 	[rest: string]: any;
 }
 
 function App() {
-	const { isAuthenticated } = useAuth();
+	const { isAuthenticated, isLoading } = useAuth();
 
 	const AuthRoute = ( { element: Component, ...rest }: AuthRouteProps ) => {
 		return isAuthenticated ? <Component {...rest} /> : <Navigate to={SIGN_IN} />;
 	};
+
+	if ( isLoading ) { return <div>Loading...</div>; }
 
 	return (
 		<Router>
@@ -28,7 +27,7 @@ function App() {
 				<Routes>
 					<Route path={SIGN_IN} element={<SignIn />} />
 					<Route path={SIGN_UP} element={<SignUp />} />
-					<Route path={PROFILE} element={<AuthRoute element={Profile} />} />
+					<Route path={PROFILE} element={<AuthRoute element={Profile}/>} />
 					<Route path="*" element={<Navigate to={HOME} replace />} />
 				</Routes>
 			</div>

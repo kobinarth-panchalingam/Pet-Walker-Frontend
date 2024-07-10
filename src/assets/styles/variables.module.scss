@@ -23,13 +23,13 @@
 $primary-color: #3F51B5;
 $secondary-color: #4CAF50;
 $error-color: #F44336;
+$success-color: #8BC34A;
 $warning-color: #FF9800;
 $info-color: #2196F3;
-$success-color: #8BC34A;
-$light-color: #F5F5F5;
+$light-color: #ffffff;
 $dark-color: #212121;
 $text-color: #555555;
-$background-color: #EEEEEE;
+$background-color: #efefef;
 $accent-color: #FFC107;
 $border-color: #CCCCCC;
 
@@ -38,11 +38,13 @@ $border-color: #CCCCCC;
     primaryColor: $primary-color;
     secondaryColor: $secondary-color;
     errorColor: $error-color;
+    successColor: $success-color;
     warningColor: $warning-color;
     infoColor: $info-color;
-    successColor: $success-color;
-    textColor: $text-color;
+    lightColor: $light-color;
+    darkColor: $dark-color;
     backgroundColor: $background-color;
+    textColor: $text-color;
     accentColor: $accent-color;
     borderColor: $border-color;
 }

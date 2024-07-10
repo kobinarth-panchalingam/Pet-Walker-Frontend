@@ -4,6 +4,7 @@ import { parseToken, SessionStorage, StorageManager } from '@utils';
 
 interface AuthState {
     isAuthenticated: boolean;
+	isLoading: boolean;
     user: User | null;
     token: string | null;
     login: ( token: string ) => void;
@@ -12,6 +13,7 @@ interface AuthState {
 
 const AuthContext = createContext<AuthState>( {
 	isAuthenticated: false,
+	isLoading: true,
 	user: null,
 	token: null,
 	login: () => {},
@@ -26,6 +28,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ( { children } ) => {
 	const [ isAuthenticated, setIsAuthenticated ] = useState<boolean>( false );
 	const [ user, setUser ] = useState<User | null>( null );
 	const [ token, setToken ] = useState<string | null>( null );
+	const [ isLoading, setIsLoading ] = useState<boolean>( true );
 	const storageManager = new StorageManager( new SessionStorage() );
 
 	// Check for token in storage on app load
@@ -39,6 +42,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ( { children } ) => {
 				setIsAuthenticated( true );
 			}
 		}
+		setIsLoading( false );
 	}, [] );
 
 	// Handle login function
@@ -64,6 +68,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ( { children } ) => {
 	// Provide the context value to children components
 	const contextValue: AuthState = {
 		isAuthenticated,
+		isLoading,
 		user,
 		token,
 		login,

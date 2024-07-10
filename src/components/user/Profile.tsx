@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuth } from '@hooks/UseAuth';
 import useJsonForms from '@hooks/UseJsonForms';
 import { RESTErrorHandler } from '@utils';
 
-
 const Profile: React.FC = () => {
-	const [ editMode, setEditMode ] = useState( false );
 	const { user } = useAuth();
 	const data = {
 		basicInfo: {
 			firstName: user?.firstName,
 			lastName: user?.lastName,
 			email: user?.email
+			// phoneNumber: ''
+		},
+		address: {
+			street: '',
+			city: '',
+			district: '',
+			zip: ''
+		},
+		other: {
+			// dob: '',
+			hasEmergencyContact: false,
+			emergencyContact: {
+				name: ''
+				// phoneNumber: ''
+			}
 		}
 	};
-	const { Form, formData, errors, isFormValid } = useJsonForms( { schema, uischema, data, readonly: !editMode } );
+	const { Form, formData, errors, isFormValid } = useJsonForms( { schema, uischema, data } );
 
 	const handleSubmit = async( event: React.FormEvent ) => {
 		event.preventDefault();
@@ -27,31 +40,14 @@ const Profile: React.FC = () => {
 	};
 
 	return (
-		<div className="container vh-100 d-flex justify-content-center align-items-center">
+		<div className="d-flex justify-content-center align-items-center text-start">
 			<div className="row justify-content-center w-100">
 				<div className="col-12 col-md-8 col-lg-6">
-					<div className="card p-4">
+					<div className="p-4">
 						<form onSubmit={handleSubmit}>
 							{Form}
-							<div className="d-flex justify-content-end gap-2 mt-2 mb-4"> {/* Adjusted for alignment and spacing */}
-								{editMode ?
-									<>
-										<button
-											type="button"
-											className="btn btn-secondary"
-											onClick={() => setEditMode( false )}
-										>
-									Cancel
-										</button>
-										<button type="submit" className="btn btn-primary" disabled={!isFormValid}>Save</button>
-									</> :
-									<button
-										type="button"
-										className="btn btn-primary"
-										onClick={() => setEditMode( true )}
-									>
-									Edit
-									</button>}
+							<div className="d-flex justify-content-end gap-2 mt-2 mb-4">
+								<button type="submit" className="btn btn-primary" disabled={!isFormValid}>Save & Continue</button>
 							</div>
 						</form>
 					</div>
@@ -69,7 +65,8 @@ const schema = {
 			properties: {
 				firstName: { type: 'string', title: 'First Name' },
 				lastName: { type: 'string', title: 'Last Name' },
-				email: { type: 'string', format: 'email', title: 'Email' }
+				email: { type: 'string', format: 'email', title: 'Email' },
+				phoneNumber: { type: 'string', title: 'Phone Number', minLength: 10, maxLength: 10 }
 			}
 		},
 		address: {
@@ -77,74 +74,133 @@ const schema = {
 			properties: {
 				street: { type: 'string', title: 'Street' },
 				city: { type: 'string', title: 'City' },
-				state: { type: 'string', title: 'State' },
+				district: { type: 'string', title: 'District' },
 				zip: { type: 'string', title: 'Zip Code' }
 			}
 		},
 		other: {
 			type: 'object',
 			properties: {
-				bio: { type: 'string', title: 'Bio' },
-				website: { type: 'string', title: 'Website' }
+				dob: { type: 'string', format: 'date', title: 'Date of Birth' },
+				hasEmergencyContact: { type: 'boolean', title: 'Add Emergency Contact' },
+				emergencyContact: {
+					type: 'object',
+					properties: {
+						name: { type: 'string', title: 'Contact Name' },
+						phoneNumber: { type: 'string', title: 'Contact Phone Number', minLength: 10, maxLength: 10 }
+					}
+				}
 			}
 		}
 	}
 };
 
 const uischema = {
-	type: 'Categorization',
+	type: 'VerticalLayout',
 	elements: [
 		{
-			type: 'Category',
+			type: 'Group',
 			label: 'Basic Info',
 			elements: [
 				{
-					type: 'Control',
-					scope: '#/properties/basicInfo/properties/firstName'
+					type: 'HorizontalLayout',
+					elements: [
+						{
+							type: 'Control',
+							scope: '#/properties/basicInfo/properties/firstName'
+						},
+						{
+							type: 'Control',
+							scope: '#/properties/basicInfo/properties/lastName'
+						}
+					]
 				},
 				{
-					type: 'Control',
-					scope: '#/properties/basicInfo/properties/lastName'
-				},
-				{
-					type: 'Control',
-					scope: '#/properties/basicInfo/properties/email'
+					type: 'HorizontalLayout',
+					elements: [
+						{
+							type: 'Control',
+							scope: '#/properties/basicInfo/properties/email',
+							options: {
+								readonly: true
+							}
+						},
+						{
+							type: 'Control',
+							scope: '#/properties/basicInfo/properties/phoneNumber'
+						}
+					]
 				}
 			]
 		},
 		{
-			type: 'Category',
+			type: 'Group',
 			label: 'Address',
 			elements: [
 				{
-					type: 'Control',
-					scope: '#/properties/address/properties/street'
+					type: 'HorizontalLayout',
+					elements: [
+						{
+							type: 'Control',
+							scope: '#/properties/address/properties/street'
+						}
+					]
 				},
 				{
-					type: 'Control',
-					scope: '#/properties/address/properties/city'
-				},
-				{
-					type: 'Control',
-					scope: '#/properties/address/properties/state'
-				},
-				{
-					type: 'Control',
-					scope: '#/properties/address/properties/zip'
+					type: 'HorizontalLayout',
+					elements: [
+						{
+							type: 'Control',
+							scope: '#/properties/address/properties/city'
+						},
+						{
+							type: 'Control',
+							scope: '#/properties/address/properties/district'
+						},
+						{
+							type: 'Control',
+							scope: '#/properties/address/properties/zip'
+						}
+					]
 				}
 			]
 		},
 		{
-			type: 'Category',
+			type: 'Group',
 			label: 'Other',
 			elements: [
 				{
 					type: 'Control',
-					scope: '#/properties/other/properties/bio'
+					scope: '#/properties/other/properties/dob',
+					options: {
+						styles: {
+							width: '50%'
+						}
+					}
 				},
 				{
 					type: 'Control',
-					scope: '#/properties/other/properties/website'
+					scope: '#/properties/other/properties/hasEmergencyContact'
+				},
+				{
+					type: 'HorizontalLayout',
+					rule: {
+						effect: 'HIDE',
+						condition: {
+							scope: '#/properties/other/properties/hasEmergencyContact',
+							schema: { const: false }
+						}
+					},
+					elements: [
+						{
+							type: 'Control',
+							scope: '#/properties/other/properties/emergencyContact/properties/name'
+						},
+						{
+							type: 'Control',
+							scope: '#/properties/other/properties/emergencyContact/properties/phoneNumber'
+						}
+					]
 				}
 			]
 		}

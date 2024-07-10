@@ -6,7 +6,7 @@ export const customizedTheme = createTheme( {
 	components: {
 		MuiTextField: {
 			defaultProps: {
-				variant: 'outlined'
+				variant: 'standard'
 			}
 		}
 	},
@@ -29,13 +29,13 @@ export const customizedTheme = createTheme( {
 		success: {
 			main: variables.successColor
 		},
-		text: {
-			primary: variables.textColor,
-			secondary: variables.textColor
-		},
+		// text: {
+		// 	primary: variables.textColor,
+		// 	secondary: variables.textColor
+		// },
 		background: {
-			default: variables.backgroundColor,
-			paper: variables.backgroundColor
+			default: variables.lightColor,
+			paper: variables.lightColor
 		}
 	}
 } );
