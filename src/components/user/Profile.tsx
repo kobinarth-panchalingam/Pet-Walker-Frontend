@@ -40,18 +40,14 @@ const Profile: React.FC = () => {
 	};
 
 	return (
-		<div className="d-flex justify-content-center align-items-center text-start">
-			<div className="row justify-content-center w-100">
-				<div className="col-12 col-md-8 col-lg-6">
-					<div className="p-4">
-						<form onSubmit={handleSubmit}>
-							{Form}
-							<div className="d-flex justify-content-end gap-2 mt-2 mb-4">
-								<button type="submit" className="btn btn-primary" disabled={!isFormValid}>Save & Continue</button>
-							</div>
-						</form>
+		<div className="d-flex row w-100 justify-content-center text-start">
+			<div className="py-4 px-0 col-lg-10 ">
+				<form onSubmit={handleSubmit}>
+					{Form}
+					<div className="d-flex justify-content-end gap-2 mt-2 mb-4">
+						<button type="submit" className="btn btn-primary" disabled={!isFormValid}>Save & Continue</button>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	);
@@ -66,7 +62,8 @@ const schema = {
 				firstName: { type: 'string', title: 'First Name' },
 				lastName: { type: 'string', title: 'Last Name' },
 				email: { type: 'string', format: 'email', title: 'Email' },
-				phoneNumber: { type: 'string', title: 'Phone Number', minLength: 10, maxLength: 10 }
+				phoneNumber: { type: 'string', title: 'Phone Number', minLength: 10, maxLength: 10 },
+				dob: { type: 'string', format: 'date', title: 'Date of Birth' }
 			}
 		},
 		address: {
@@ -81,7 +78,6 @@ const schema = {
 		other: {
 			type: 'object',
 			properties: {
-				dob: { type: 'string', format: 'date', title: 'Date of Birth' },
 				hasEmergencyContact: { type: 'boolean', title: 'Add Emergency Contact' },
 				emergencyContact: {
 					type: 'object',
@@ -120,14 +116,23 @@ const uischema = {
 					elements: [
 						{
 							type: 'Control',
-							scope: '#/properties/basicInfo/properties/email',
-							options: {
-								readonly: true
-							}
+							scope: '#/properties/basicInfo/properties/phoneNumber'
 						},
 						{
 							type: 'Control',
-							scope: '#/properties/basicInfo/properties/phoneNumber'
+							scope: '#/properties/basicInfo/properties/dob'
+						}
+					]
+				},
+				{
+					type: 'HorizontalLayout',
+					elements: [
+						{
+							type: 'Control',
+							scope: '#/properties/basicInfo/properties/email',
+							options: {
+								readOnly: true
+							}
 						}
 					]
 				}
@@ -169,15 +174,6 @@ const uischema = {
 			type: 'Group',
 			label: 'Other',
 			elements: [
-				{
-					type: 'Control',
-					scope: '#/properties/other/properties/dob',
-					options: {
-						styles: {
-							width: '50%'
-						}
-					}
-				},
 				{
 					type: 'Control',
 					scope: '#/properties/other/properties/hasEmergencyContact'

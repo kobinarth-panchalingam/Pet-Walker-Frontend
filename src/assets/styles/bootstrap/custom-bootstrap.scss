@@ -4,10 +4,10 @@
 $theme-colors: (
     "primary": $primary-color,
     "secondary": $secondary-color,
+    "danger": $error-color,
     "success": $success-color,
     "info": $info-color,
     "warning": $warning-color,
-    "danger": $error-color,
     "light": $light-color,
     "dark": $dark-color
 );
@@ -15,10 +15,10 @@ $theme-colors: (
 // Optionally, you can also override individual color variables
 $primary: $primary-color;
 $secondary: $secondary-color;
+$danger: $error-color;
 $success: $success-color;
 $info: $info-color;
 $warning: $warning-color;
-$danger: $error-color;
 $light: $light-color;
 $dark: $dark-color;
 

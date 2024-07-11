@@ -24,27 +24,23 @@ const SignIn: React.FC = () => {
 	};
 
 	return (
-		<div className="vh-100 d-flex justify-content-center align-items-center">
-			<div className="row justify-content-center w-100">
-				<div className="col-12 col-md-8 col-lg-4">
-					<div className="card p-4">
-						<h2 className="text-center mb-4">Sign In</h2>
-						<form onSubmit={handleSubmit}>
-							{Form}
-							<div className="mt-2 mb-3 text-start">
-								<a href="#" className="text-decoration-none">Forgot Password?</a>
-							</div>
-							<div className="mt-2 mb-4">
-								<button type="submit" className="btn btn-primary w-100" disabled={!isFormValid}>Sign In</button>
-							</div>
-							<hr className="my-3" />
-							<div className="mt-2">
-								<span>Don't have an account? </span>
-								<NavLink to={SIGN_UP} className="text-decoration-none">Sign Up</NavLink>
-							</div>
-						</form>
+		<div className="d-flex justify-content-center row w-100">
+			<div className="card p-4 p-0 col-12 col-md-8 col-lg-6">
+				<h2 className="text-center mb-4">Sign In</h2>
+				<form onSubmit={handleSubmit}>
+					{Form}
+					<div className="mt-2 mb-3 text-start">
+						<a href="#" className="text-decoration-none">Forgot Password?</a>
 					</div>
-				</div>
+					<div className="mt-2 mb-4">
+						<button type="submit" className="btn btn-primary w-100" disabled={!isFormValid}>Sign In</button>
+					</div>
+					<hr className="my-3" />
+					<div className="mt-2">
+						<span>Don't have an account? </span>
+						<NavLink to={SIGN_UP} className="text-decoration-none">Sign Up</NavLink>
+					</div>
+				</form>
 			</div>
 		</div>
 	);

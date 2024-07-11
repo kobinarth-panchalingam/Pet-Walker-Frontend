@@ -24,12 +24,14 @@ function App() {
 		<Router>
 			<div className='App'>
 				<Navbar />
-				<Routes>
-					<Route path={SIGN_IN} element={<SignIn />} />
-					<Route path={SIGN_UP} element={<SignUp />} />
-					<Route path={PROFILE} element={<AuthRoute element={Profile}/>} />
-					<Route path="*" element={<Navigate to={HOME} replace />} />
-				</Routes>
+				<div className='container d-flex flex-column flex-grow-1 justify-content-center align-items-center col-sm-12 col-md-10 col-lg-8'>
+					<Routes>
+						<Route path={SIGN_IN} element={<SignIn />} />
+						<Route path={SIGN_UP} element={<SignUp />} />
+						<Route path={PROFILE} element={<AuthRoute element={Profile}/>} />
+						<Route path="*" element={<Navigate to={HOME} replace />} />
+					</Routes>
+				</div>
 			</div>
 		</Router>
 	);

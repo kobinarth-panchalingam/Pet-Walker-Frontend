@@ -27,12 +27,9 @@ $success-color: #8BC34A;
 $warning-color: #FF9800;
 $info-color: #2196F3;
 $light-color: #ffffff;
-$dark-color: #212121;
-$text-color: #555555;
-$background-color: #efefef;
-$accent-color: #FFC107;
-$border-color: #CCCCCC;
-
+$dark-color: #000000;
+$text-color: #0f053a;
+$background-color: #f2f5fc;
 
 :export {
     primaryColor: $primary-color;
@@ -45,6 +42,4 @@ $border-color: #CCCCCC;
     darkColor: $dark-color;
     backgroundColor: $background-color;
     textColor: $text-color;
-    accentColor: $accent-color;
-    borderColor: $border-color;
 }

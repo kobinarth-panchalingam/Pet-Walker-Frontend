@@ -85,7 +85,7 @@ export const Navbar: React.FC = () => {
 
 	return (
 		<nav className="navbar navbar-expand-lg bg-light">
-			<div className="container">
+			<div className="container col-sm-12 col-md-10 col-lg-8">
 				<Link className="navbar-brand" to={HOME}>PetWalk</Link>
 				<button
 					className="navbar-toggler"

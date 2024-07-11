@@ -26,23 +26,21 @@ const SignUp: React.FC = () => {
 	};
 
 	return (
-		<div className="vh-100 d-flex justify-content-center align-items-center">
-			<div className="row justify-content-center w-100">
-				<div className="col-12 col-md-8 col-lg-4">
-					<div className="card p-4">
-						<h2 className="text-center mb-4">Sign Up</h2>
-						<form onSubmit={handleSubmit}>
-							{Form}
-							<div className="mt-2 mb-4   ">
-								<button type="submit" className="btn btn-primary w-100" disabled={!isFormValid}>Sign Up</button>
-							</div>
-							<hr className="my-3" />
-							<div className="mt-2">
-								<span>Already have an account? </span>
-								<NavLink to={SIGN_IN} className="text-decoration-none">Sign In</NavLink>
-							</div>
-						</form>
-					</div>
+		<div className="d-flex row w-100 justify-content-center">
+			<div className="p-0 col-12 col-md-8 col-lg-6">
+				<div className="card p-4">
+					<h2 className="text-center mb-4">Sign Up</h2>
+					<form onSubmit={handleSubmit}>
+						{Form}
+						<div className="mt-2 mb-4   ">
+							<button type="submit" className="btn btn-primary w-100" disabled={!isFormValid}>Sign Up</button>
+						</div>
+						<hr className="my-3" />
+						<div className="mt-2">
+							<span>Already have an account? </span>
+							<NavLink to={SIGN_IN} className="text-decoration-none">Sign In</NavLink>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
