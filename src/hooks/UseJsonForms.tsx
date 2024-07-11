@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { rankWith, scopeEndsWith, uiTypeIs } from '@jsonforms/core';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import { JsonForms, JsonFormsInitStateProps, JsonFormsReactProps } from '@jsonforms/react';
 
+import FileUploadControl from '../components/jsonforms/FileUploadControl';
 type JsonFormsProps = JsonFormsInitStateProps & JsonFormsReactProps;
 
 interface UseJsonFormsProps extends Omit<JsonFormsProps, 'renderers' | 'cells'> {}
@@ -10,6 +12,11 @@ interface OnChangeParams {
     errors: any[];
     data: any;
 }
+
+const renderers = [
+	...materialRenderers,
+	{ tester: rankWith( 3, uiTypeIs( 'Control' ) && scopeEndsWith( 'profilePhoto' ) ), renderer: FileUploadControl }
+];
 
 const useJsonForms = ( { schema, uischema, data, readonly }: UseJsonFormsProps ) => {
 	const [ formData, setFormData ] = useState( data );
@@ -26,7 +33,7 @@ const useJsonForms = ( { schema, uischema, data, readonly }: UseJsonFormsProps )
 		uischema={uischema}
 		data={formData}
 		onChange={onChange}
-		renderers={materialRenderers}
+		renderers={renderers}
 		cells={materialCells}
 		readonly={readonly}
 	/>

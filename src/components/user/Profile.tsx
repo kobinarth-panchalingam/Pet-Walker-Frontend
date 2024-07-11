@@ -9,7 +9,8 @@ const Profile: React.FC = () => {
 		basicInfo: {
 			firstName: user?.firstName,
 			lastName: user?.lastName,
-			email: user?.email
+			email: user?.email,
+			profilePhoto: 'src/assets/images/profile.png'
 			// phoneNumber: ''
 		},
 		address: {
@@ -63,7 +64,8 @@ const schema = {
 				lastName: { type: 'string', title: 'Last Name' },
 				email: { type: 'string', format: 'email', title: 'Email' },
 				phoneNumber: { type: 'string', title: 'Phone Number', minLength: 10, maxLength: 10 },
-				dob: { type: 'string', format: 'date', title: 'Date of Birth' }
+				dob: { type: 'string', format: 'date', title: 'Date of Birth' },
+				profilePhoto: { type: 'string', title: 'Profile Photo', format: 'data-url' }
 			}
 		},
 		address: {
@@ -102,37 +104,42 @@ const uischema = {
 					type: 'HorizontalLayout',
 					elements: [
 						{
-							type: 'Control',
-							scope: '#/properties/basicInfo/properties/firstName'
+							type: 'VerticalLayout',
+							elements: [
+								{
+									type: 'Control',
+									scope: '#/properties/basicInfo/properties/profilePhoto',
+									label: 'Profile Photo'
+								}
+							]
 						},
 						{
-							type: 'Control',
-							scope: '#/properties/basicInfo/properties/lastName'
-						}
-					]
-				},
-				{
-					type: 'HorizontalLayout',
-					elements: [
-						{
-							type: 'Control',
-							scope: '#/properties/basicInfo/properties/phoneNumber'
-						},
-						{
-							type: 'Control',
-							scope: '#/properties/basicInfo/properties/dob'
-						}
-					]
-				},
-				{
-					type: 'HorizontalLayout',
-					elements: [
-						{
-							type: 'Control',
-							scope: '#/properties/basicInfo/properties/email',
-							options: {
-								readOnly: true
-							}
+							type: 'VerticalLayout',
+							elements: [
+								{
+									type: 'Control',
+									scope: '#/properties/basicInfo/properties/firstName'
+								},
+								{
+									type: 'Control',
+									scope: '#/properties/basicInfo/properties/lastName'
+								},
+								{
+									type: 'Control',
+									scope: '#/properties/basicInfo/properties/phoneNumber'
+								},
+								{
+									type: 'Control',
+									scope: '#/properties/basicInfo/properties/dob'
+								},
+								{
+									type: 'Control',
+									scope: '#/properties/basicInfo/properties/email',
+									options: {
+										readOnly: true
+									}
+								}
+							]
 						}
 					]
 				}
