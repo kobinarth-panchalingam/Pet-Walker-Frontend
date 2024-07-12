@@ -29,19 +29,12 @@ const FileUploadControl = ( { data, handleChange, path, label, accept }: FileUpl
 	};
 
 	return (
-		<div className='d-flex flex-column align-items-center justify-content-center'>
+		<div className='file-upload-container'>
 			<InputLabel>{label}</InputLabel>
-			<div onClick={onFrameClick} style={{
-				border: '2px dashed #ccc',
-				width: '200px',
-				height: '200px',
-				display: 'flex',
-				alignItems: 'center',
-				justifyContent: 'center',
-				backgroundImage: `url(${data})`,
-				backgroundSize: 'cover',
-				cursor: 'pointer'
-			}}>
+			<div onClick={onFrameClick}
+				className='file-upload-frame mt-2'
+				style={{ backgroundImage: `url(${data})` }}
+			>
 				{!data && <span>Click to upload</span>}
 			</div>
 			<input
