@@ -15,7 +15,11 @@ interface OnChangeParams {
 
 const renderers = [
 	...materialRenderers,
-	{ tester: rankWith( 3, uiTypeIs( 'Control' ) && scopeEndsWith( 'profilePhoto' ) ), renderer: FileUploadControl }
+	{
+		tester: rankWith( 3, uiTypeIs( 'Control' ) && scopeEndsWith( 'file' ) ),
+		renderer: ( props:any ) => <FileUploadControl {...props} label={props.uischema.label} accept={props.uischema.accept} />
+
+	}
 ];
 
 const useJsonForms = ( { schema, uischema, data, readonly }: UseJsonFormsProps ) => {

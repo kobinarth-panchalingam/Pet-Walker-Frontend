@@ -1,14 +1,16 @@
 import React, { useRef } from 'react';
-import { ControlProps } from '@jsonforms/core';
 import { withJsonFormsControlProps } from '@jsonforms/react';
 import { InputLabel } from '@mui/material';
 
-interface FileUploadControlProps extends ControlProps {
+interface FileUploadControlProps{
+	data: any;
+	handleChange: ( path: string, value: any ) => void;
+	path: string;
     label: string;
+	accept?: string;
 }
 
-const FileUploadControl = ( { data, handleChange, path, label }: FileUploadControlProps ) => {
-	console.log( data );
+const FileUploadControl = ( { data, handleChange, path, label, accept }: FileUploadControlProps ) => {
 	const fileInputRef = useRef<HTMLInputElement>( null );
 	const onFileChange = ( event: React.ChangeEvent<HTMLInputElement> ) => {
 		if ( event.target.files && event.target.files[0] ) {
@@ -38,8 +40,7 @@ const FileUploadControl = ( { data, handleChange, path, label }: FileUploadContr
 				justifyContent: 'center',
 				backgroundImage: `url(${data})`,
 				backgroundSize: 'cover',
-				cursor: 'pointer',
-				margin: '10px 0'
+				cursor: 'pointer'
 			}}>
 				{!data && <span>Click to upload</span>}
 			</div>
@@ -47,6 +48,7 @@ const FileUploadControl = ( { data, handleChange, path, label }: FileUploadContr
 				ref={fileInputRef}
 				type="file"
 				hidden
+				accept={accept}
 				onChange={onFileChange}
 			/>
 		</div>

@@ -3,6 +3,8 @@ import { useAuth } from '@hooks/UseAuth';
 import useJsonForms from '@hooks/UseJsonForms';
 import { RESTErrorHandler } from '@utils';
 
+import profile from '../../assets/images/profile.png';
+
 const Profile: React.FC = () => {
 	const { user } = useAuth();
 	const data = {
@@ -10,7 +12,7 @@ const Profile: React.FC = () => {
 			firstName: user?.firstName,
 			lastName: user?.lastName,
 			email: user?.email,
-			profilePhoto: 'src/assets/images/profile.png'
+			file: profile
 			// phoneNumber: ''
 		},
 		address: {
@@ -65,7 +67,7 @@ const schema = {
 				email: { type: 'string', format: 'email', title: 'Email' },
 				phoneNumber: { type: 'string', title: 'Phone Number', minLength: 10, maxLength: 10 },
 				dob: { type: 'string', format: 'date', title: 'Date of Birth' },
-				profilePhoto: { type: 'string', title: 'Profile Photo', format: 'data-url' }
+				file: { type: 'string', title: 'Profile Photo' }
 			}
 		},
 		address: {
@@ -108,8 +110,9 @@ const uischema = {
 							elements: [
 								{
 									type: 'Control',
-									scope: '#/properties/basicInfo/properties/profilePhoto',
-									label: 'Profile Photo'
+									scope: '#/properties/basicInfo/properties/file',
+									label: 'Profile Photo',
+									accept: 'image/*'
 								}
 							]
 						},
