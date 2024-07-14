@@ -3,7 +3,7 @@
 body {
   background-color: $background-color;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: $text-color;
@@ -16,7 +16,6 @@ body {
 }
 
 .App {
-  text-align: center;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -81,6 +80,8 @@ h6,
 .navbar {
   .navbar-brand {
     color: $primary-color;
+    font-weight: 400;
+    font-size: 1.5rem;
 
     &:hover {
       color: darken($primary-color, 10%);
@@ -148,4 +149,8 @@ h6,
     }
   }
 
+}
+
+.frame-container:hover .remove-photo-button {
+  opacity: 1;
 }

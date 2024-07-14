@@ -1,56 +1,74 @@
 import React from 'react';
-import { useAuth } from '@hooks/UseAuth';
-import useJsonForms from '@hooks/UseJsonForms';
-import { RESTErrorHandler } from '@utils';
+import { GET_USER, UPDATE_USER } from '@api';
+import { useMutation, useQuery } from '@apollo/client';
+import { formatDateOnly, RESTErrorHandler } from '@utils';
+import { UpdateUserMutationVariables } from 'src/api/graphql/__generated__/graphql';
 
 import profile from '../../assets/images/profile.png';
+import ErrorComponent from '../common/ErrorComponent';
+import { Form } from '../common/Form';
+import LoadingIndicator from '../common/LoadingIndicator';
 
 const Profile: React.FC = () => {
-	const { user } = useAuth();
-	const data = {
+	const { data, loading: getUserLoading, error } = useQuery( GET_USER );
+	const user = data?.getUser;
+	const initialFormData = {
 		basicInfo: {
 			firstName: user?.firstName,
-			lastName: user?.lastName,
+			lastName: user?.lastName || undefined,
+			phoneNumber: user?.phoneNumber || undefined,
+			dob: user?.dob ? formatDateOnly( user?.dob ) : undefined,
 			email: user?.email,
-			file: profile
-			// phoneNumber: ''
+			profilePhoto: user?.profilePhoto || profile
 		},
 		address: {
-			street: '',
-			city: '',
-			district: '',
-			zip: ''
+			street: user?.street || undefined,
+			city: user?.city || undefined,
+			district: user?.district || undefined,
+			zipCode: user?.zipCode || undefined
 		},
 		other: {
-			// dob: '',
-			hasEmergencyContact: false,
-			emergencyContact: {
-				name: ''
-				// phoneNumber: ''
-			}
+			emergencyContacts: user?.emergencyContacts || []
 		}
 	};
-	const { Form, formData, errors, isFormValid } = useJsonForms( { schema, uischema, data } );
 
-	const handleSubmit = async( event: React.FormEvent ) => {
-		event.preventDefault();
+	const [ updateUser, { loading: updateUserLoading } ] = useMutation( UPDATE_USER );
+
+	const handleSubmit = async( formData:any ) => {
+		const variables: UpdateUserMutationVariables = {
+			input: {
+				firstName: formData.basicInfo.firstName,
+				lastName: formData.basicInfo.lastName,
+				phoneNumber: formData.basicInfo.phoneNumber,
+				dob: formData.basicInfo.dob,
+				profilePhoto: formData.basicInfo.profilePhoto,
+				street: formData.address.street,
+				city: formData.address.city,
+				district: formData.address.district,
+				zipCode: formData.address.zipCode,
+				emergencyContacts: formData.other.emergencyContacts.map( ( contact:any ) => ( { name: contact.name, phoneNumber: contact.phoneNumber } ) )
+			}
+		};
+
 		try {
-			console.log( formData );
-			console.log( errors );
+			updateUser( { variables } );
 		} catch ( error ) {
-			RESTErrorHandler( error );
+			RESTErrorHandler( error ); // todo: create graphql error handler
 		}
 	};
+
+	if ( getUserLoading ) {
+		return <LoadingIndicator />;
+	}
+
+	if ( error ) {
+		return <ErrorComponent error={error} />;
+	}
 
 	return (
 		<div className="d-flex row w-100 justify-content-center text-start">
-			<div className="py-4 px-0 col-lg-10 ">
-				<form onSubmit={handleSubmit}>
-					{Form}
-					<div className="d-flex justify-content-end gap-2 mt-2 mb-4">
-						<button type="submit" className="btn btn-primary" disabled={!isFormValid}>Save & Continue</button>
-					</div>
-				</form>
+			<div className="py-4 px-0">
+				<Form schema={schema} uischema={uischema} data={initialFormData} handleSubmit={handleSubmit} isLoading={updateUserLoading} />
 			</div>
 		</div>
 	);
@@ -65,10 +83,11 @@ const schema = {
 				firstName: { type: 'string', title: 'First Name' },
 				lastName: { type: 'string', title: 'Last Name' },
 				email: { type: 'string', format: 'email', title: 'Email' },
-				phoneNumber: { type: 'string', title: 'Phone Number', minLength: 10, maxLength: 10 },
+				phoneNumber: { type: 'string', title: 'Phone Number', pattern: '^\\(?([0-9]{3})\\)?[- ]?([0-9]{3})[- ]?([0-9]{4})$' },
 				dob: { type: 'string', format: 'date', title: 'Date of Birth' },
-				file: { type: 'string', title: 'Profile Photo' }
-			}
+				profilePhoto: { type: 'string', title: 'Profile Photo' }
+			},
+			required: [ 'firstName', 'phoneNumber' ]
 		},
 		address: {
 			type: 'object',
@@ -76,18 +95,27 @@ const schema = {
 				street: { type: 'string', title: 'Street' },
 				city: { type: 'string', title: 'City' },
 				district: { type: 'string', title: 'District' },
-				zip: { type: 'string', title: 'Zip Code' }
-			}
+				zipCode: { type: 'string', title: 'Zip Code', pattern: '^[0-9]{5}$', minLength: 5, maxLength: 5 }
+			},
+			required: [ 'street', 'city', 'district', 'zipCode' ]
 		},
 		other: {
 			type: 'object',
 			properties: {
-				hasEmergencyContact: { type: 'boolean', title: 'Add Emergency Contact' },
-				emergencyContact: {
-					type: 'object',
-					properties: {
-						name: { type: 'string', title: 'Contact Name' },
-						phoneNumber: { type: 'string', title: 'Contact Phone Number', minLength: 10, maxLength: 10 }
+				emergencyContacts: {
+					type: 'array',
+					title: 'Emergency Contacts',
+					items: {
+						type: 'object',
+						properties: {
+							name: { type: 'string', title: 'Contact Name' },
+							phoneNumber: {
+								type: 'string',
+								title: 'Contact Phone Number',
+								pattern: '^\\(?([0-9]{3})\\)?[- ]?([0-9]{3})[- ]?([0-9]{4})$'
+							}
+						},
+						required: [ 'name', 'phoneNumber' ]
 					}
 				}
 			}
@@ -109,8 +137,8 @@ const uischema = {
 							type: 'VerticalLayout',
 							elements: [
 								{
-									type: 'Control',
-									scope: '#/properties/basicInfo/properties/file',
+									type: 'FileUpload',
+									scope: '#/properties/basicInfo/properties/profilePhoto',
 									label: 'Profile Photo',
 									accept: 'image/*'
 								}
@@ -174,7 +202,7 @@ const uischema = {
 						},
 						{
 							type: 'Control',
-							scope: '#/properties/address/properties/zip'
+							scope: '#/properties/address/properties/zipCode'
 						}
 					]
 				}
@@ -185,26 +213,28 @@ const uischema = {
 			label: 'Other',
 			elements: [
 				{
-					type: 'Control',
-					scope: '#/properties/other/properties/hasEmergencyContact'
-				},
-				{
 					type: 'HorizontalLayout',
-					rule: {
-						effect: 'HIDE',
-						condition: {
-							scope: '#/properties/other/properties/hasEmergencyContact',
-							schema: { const: false }
-						}
-					},
 					elements: [
 						{
 							type: 'Control',
-							scope: '#/properties/other/properties/emergencyContact/properties/name'
-						},
-						{
-							type: 'Control',
-							scope: '#/properties/other/properties/emergencyContact/properties/phoneNumber'
+							scope: '#/properties/other/properties/emergencyContacts',
+							options: {
+								detail: {
+									type: 'HorizontalLayout',
+									elements: [
+										{
+											type: 'Control',
+											scope: '#/properties/name',
+											label: 'Contact Name'
+										},
+										{
+											type: 'Control',
+											scope: '#/properties/phoneNumber',
+											label: 'Phone Number'
+										}
+									]
+								}
+							}
 						}
 					]
 				}

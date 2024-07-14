@@ -45,6 +45,18 @@ export const customizedTheme = createTheme( {
 	},
 	typography( palette ) {
 		return {
+			fontFamily: [
+				'-apple-system',
+				'Roboto',
+				'"Segoe UI"',
+				'BlinkMacSystemFont',
+				'"Helvetica Neue"',
+				'Arial',
+				'sans-serif',
+				'"Apple Color Emoji"',
+				'"Segoe UI Emoji"',
+				'"Segoe UI Symbol"'
+			].join( ',' ),
 			h1: {
 				color: palette.text.primary
 			},

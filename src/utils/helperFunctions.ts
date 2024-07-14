@@ -19,4 +19,8 @@ const parseToken = ( token: string ): User | null => {
 	}
 };
 
-export { parseToken };
+const formatDateOnly = ( dateString: string ) => {
+	return dateString.split( 'T' )[0];
+};
+
+export { parseToken, formatDateOnly };

@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { signIn } from '@api';
 import { HOME, SIGN_UP } from '@constants/routes';
 import { useAuth } from '@hooks/UseAuth';
-import useJsonForms from '@hooks/UseJsonForms';
 import { SignInData } from '@types';
 import { RESTErrorHandler } from '@utils';
+
+import CustomJsonForms from '../jsonforms/CustomJsonForms';
 
 const SignIn: React.FC = () => {
 	const { login } = useAuth();
 	const navigate = useNavigate();
-	const { Form, formData, isFormValid } = useJsonForms( { schema, uischema, data } );
+	const [ formData, setFormData ] = useState( data );
+	const [ isFormValid, setIsFormValid ] = useState( true );
+
+	const onChange = ( { data, errors }:any ) => {
+		setFormData( data );
+		setIsFormValid( errors.length === 0 );
+	};
 
 	const handleSubmit = async( event: React.FormEvent ) => {
 		event.preventDefault();
@@ -24,11 +31,11 @@ const SignIn: React.FC = () => {
 	};
 
 	return (
-		<div className="d-flex justify-content-center row w-100">
+		<div className="d-flex justify-content-center row w-100 text-center">
 			<div className="card p-4 p-0 col-12 col-md-8 col-lg-6">
-				<h2 className="text-center mb-4">Sign In</h2>
+				<h2 className="mb-4">Sign In</h2>
 				<form onSubmit={handleSubmit}>
-					{Form}
+					<CustomJsonForms schema={schema} uischema={uischema} data={formData} onChange={onChange} />
 					<div className="mt-2 mb-3 text-start">
 						<a href="#" className="text-decoration-none">Forgot Password?</a>
 					</div>
