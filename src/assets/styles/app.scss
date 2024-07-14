@@ -154,3 +154,13 @@ h6,
 .frame-container:hover .remove-photo-button {
   opacity: 1;
 }
+
+[id^='expand-panel'] {
+  @media (max-width: 1200px) {
+    margin: 16px;
+  }
+
+  @media (max-width: 576px) {
+    margin: 20px;
+  }
+}

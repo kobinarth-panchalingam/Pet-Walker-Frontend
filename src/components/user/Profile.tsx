@@ -1,8 +1,7 @@
 import React from 'react';
 import { GET_USER, UPDATE_USER } from '@api';
 import { useMutation, useQuery } from '@apollo/client';
-import { formatDateOnly, RESTErrorHandler } from '@utils';
-import { UpdateUserMutationVariables } from 'src/api/graphql/__generated__/graphql';
+import { formatDateOnly, getChangedFields, RESTErrorHandler } from '@utils';
 
 import profile from '../../assets/images/profile.png';
 import ErrorComponent from '../common/ErrorComponent';
@@ -13,47 +12,28 @@ const Profile: React.FC = () => {
 	const { data, loading: getUserLoading, error } = useQuery( GET_USER );
 	const user = data?.getUser;
 	const initialFormData = {
-		basicInfo: {
-			firstName: user?.firstName,
-			lastName: user?.lastName || undefined,
-			phoneNumber: user?.phoneNumber || undefined,
-			dob: user?.dob ? formatDateOnly( user?.dob ) : undefined,
-			email: user?.email,
-			profilePhoto: user?.profilePhoto || profile
-		},
-		address: {
-			street: user?.street || undefined,
-			city: user?.city || undefined,
-			district: user?.district || undefined,
-			zipCode: user?.zipCode || undefined
-		},
-		other: {
-			emergencyContacts: user?.emergencyContacts || []
-		}
+		firstName: user?.firstName,
+		lastName: user?.lastName || undefined,
+		phoneNumber: user?.phoneNumber || undefined,
+		dob: user?.dob ? formatDateOnly( user?.dob ) : undefined, // TODO: return date in correct format
+		email: user?.email,
+		profilePhoto: user?.profilePhoto || profile,
+		street: user?.street || undefined,
+		city: user?.city || undefined,
+		district: user?.district || undefined,
+		zipCode: user?.zipCode || undefined,
+		emergencyContacts: user?.emergencyContacts || []
 	};
 
 	const [ updateUser, { loading: updateUserLoading } ] = useMutation( UPDATE_USER );
 
 	const handleSubmit = async( formData:any ) => {
-		const variables: UpdateUserMutationVariables = {
-			input: {
-				firstName: formData.basicInfo.firstName,
-				lastName: formData.basicInfo.lastName,
-				phoneNumber: formData.basicInfo.phoneNumber,
-				dob: formData.basicInfo.dob,
-				profilePhoto: formData.basicInfo.profilePhoto,
-				street: formData.address.street,
-				city: formData.address.city,
-				district: formData.address.district,
-				zipCode: formData.address.zipCode,
-				emergencyContacts: formData.other.emergencyContacts.map( ( contact:any ) => ( { name: contact.name, phoneNumber: contact.phoneNumber } ) )
-			}
-		};
-
 		try {
-			updateUser( { variables } );
+			updateUser( { variables: {
+				input: getChangedFields( initialFormData, formData )
+			} } );
 		} catch ( error ) {
-			RESTErrorHandler( error ); // todo: create graphql error handler
+			RESTErrorHandler( error ); // TODO: create graphql error handler
 		}
 	};
 
@@ -77,50 +57,34 @@ const Profile: React.FC = () => {
 const schema = {
 	type: 'object',
 	properties: {
-		basicInfo: {
-			type: 'object',
-			properties: {
-				firstName: { type: 'string', title: 'First Name' },
-				lastName: { type: 'string', title: 'Last Name' },
-				email: { type: 'string', format: 'email', title: 'Email' },
-				phoneNumber: { type: 'string', title: 'Phone Number', pattern: '^\\(?([0-9]{3})\\)?[- ]?([0-9]{3})[- ]?([0-9]{4})$' },
-				dob: { type: 'string', format: 'date', title: 'Date of Birth' },
-				profilePhoto: { type: 'string', title: 'Profile Photo' }
-			},
-			required: [ 'firstName', 'phoneNumber' ]
-		},
-		address: {
-			type: 'object',
-			properties: {
-				street: { type: 'string', title: 'Street' },
-				city: { type: 'string', title: 'City' },
-				district: { type: 'string', title: 'District' },
-				zipCode: { type: 'string', title: 'Zip Code', pattern: '^[0-9]{5}$', minLength: 5, maxLength: 5 }
-			},
-			required: [ 'street', 'city', 'district', 'zipCode' ]
-		},
-		other: {
-			type: 'object',
-			properties: {
-				emergencyContacts: {
-					type: 'array',
-					title: 'Emergency Contacts',
-					items: {
-						type: 'object',
-						properties: {
-							name: { type: 'string', title: 'Contact Name' },
-							phoneNumber: {
-								type: 'string',
-								title: 'Contact Phone Number',
-								pattern: '^\\(?([0-9]{3})\\)?[- ]?([0-9]{3})[- ]?([0-9]{4})$'
-							}
-						},
-						required: [ 'name', 'phoneNumber' ]
+		firstName: { type: 'string', title: 'First Name' },
+		lastName: { type: 'string', title: 'Last Name' },
+		email: { type: 'string', format: 'email', title: 'Email' },
+		phoneNumber: { type: 'string', title: 'Phone Number', pattern: '^\\(?([0-9]{3})\\)?[- ]?([0-9]{3})[- ]?([0-9]{4})$' },
+		dob: { type: 'string', format: 'date', title: 'Date of Birth' },
+		profilePhoto: { type: 'string', title: 'Profile Photo' },
+		street: { type: 'string', title: 'Street' },
+		city: { type: 'string', title: 'City' },
+		district: { type: 'string', title: 'District' },
+		zipCode: { type: 'string', title: 'Zip Code', pattern: '^[0-9]{5}$', minLength: 5, maxLength: 5 },
+		emergencyContacts: {
+			type: 'array',
+			title: 'Emergency Contacts',
+			items: {
+				type: 'object',
+				properties: {
+					name: { type: 'string', title: 'Contact Name' },
+					phoneNumber: {
+						type: 'string',
+						title: 'Contact Phone Number',
+						pattern: '^\\(?([0-9]{3})\\)?[- ]?([0-9]{3})[- ]?([0-9]{4})$'
 					}
-				}
+				},
+				required: [ 'name', 'phoneNumber' ]
 			}
 		}
-	}
+	},
+	required: [ 'firstName', 'phoneNumber', 'street', 'city', 'district', 'zipCode' ]
 };
 
 const uischema = {
@@ -138,7 +102,7 @@ const uischema = {
 							elements: [
 								{
 									type: 'FileUpload',
-									scope: '#/properties/basicInfo/properties/profilePhoto',
+									scope: '#/properties/profilePhoto',
 									label: 'Profile Photo',
 									accept: 'image/*'
 								}
@@ -149,23 +113,23 @@ const uischema = {
 							elements: [
 								{
 									type: 'Control',
-									scope: '#/properties/basicInfo/properties/firstName'
+									scope: '#/properties/firstName'
 								},
 								{
 									type: 'Control',
-									scope: '#/properties/basicInfo/properties/lastName'
+									scope: '#/properties/lastName'
 								},
 								{
 									type: 'Control',
-									scope: '#/properties/basicInfo/properties/phoneNumber'
+									scope: '#/properties/phoneNumber'
 								},
 								{
 									type: 'Control',
-									scope: '#/properties/basicInfo/properties/dob'
+									scope: '#/properties/dob'
 								},
 								{
 									type: 'Control',
-									scope: '#/properties/basicInfo/properties/email',
+									scope: '#/properties/email',
 									options: {
 										readOnly: true
 									}
@@ -185,7 +149,7 @@ const uischema = {
 					elements: [
 						{
 							type: 'Control',
-							scope: '#/properties/address/properties/street'
+							scope: '#/properties/street'
 						}
 					]
 				},
@@ -194,15 +158,15 @@ const uischema = {
 					elements: [
 						{
 							type: 'Control',
-							scope: '#/properties/address/properties/city'
+							scope: '#/properties/city'
 						},
 						{
 							type: 'Control',
-							scope: '#/properties/address/properties/district'
+							scope: '#/properties/district'
 						},
 						{
 							type: 'Control',
-							scope: '#/properties/address/properties/zipCode'
+							scope: '#/properties/zipCode'
 						}
 					]
 				}
@@ -217,7 +181,7 @@ const uischema = {
 					elements: [
 						{
 							type: 'Control',
-							scope: '#/properties/other/properties/emergencyContacts',
+							scope: '#/properties/emergencyContacts',
 							options: {
 								detail: {
 									type: 'HorizontalLayout',

@@ -1,4 +1,5 @@
-import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloLink, from, HttpLink, InMemoryCache } from '@apollo/client';
+import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
 
 import { SessionStorage, StorageManager } from './storageManager';
 
@@ -17,12 +18,14 @@ const authLink = new ApolloLink( ( operation, forward ) => {
 	return forward( operation );
 } );
 
+const removeTypenameLink = removeTypenameFromVariables();
+
 const httpLink = new HttpLink( {
 	uri: import.meta.env.VITE_GRAPHQL_API_URL
 } );
 
 const apolloClient = new ApolloClient( {
-	link: authLink.concat( httpLink ),
+	link: from( [ authLink, removeTypenameLink, httpLink ] ),
 	cache: new InMemoryCache()
 } );
 

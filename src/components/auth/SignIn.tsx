@@ -69,7 +69,7 @@ const schema = {
 		password: {
 			type: 'string',
 			title: 'Password',
-			minLength: 3 //todo: change to 8
+			minLength: 3 //TODO: change to 8
 		}
 	},
 	required: [ 'email', 'password' ]
