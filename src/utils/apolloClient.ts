@@ -1,4 +1,6 @@
+import { toast } from 'react-toastify';
 import { ApolloClient, ApolloLink, from, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloError } from '@apollo/client/errors';
 import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
 
 import { SessionStorage, StorageManager } from './storageManager';
@@ -29,4 +31,24 @@ const apolloClient = new ApolloClient( {
 	cache: new InMemoryCache()
 } );
 
-export { apolloClient };
+const GraphQLErrorHandler = ( error: ApolloError ) => {
+	if ( error.graphQLErrors ) {
+		error.graphQLErrors.forEach( ( { message } ) =>
+			toast.error( `${message}` )
+		);
+	}
+	if ( error.networkError ) {
+		toast.error( `Network error: ${error.networkError.message}` );
+	}
+};
+
+const GraphQLResponseHandler = ( response: any ) => {
+	if ( response.success ) {
+		toast.success( response.message );
+	} else {
+		toast.error( response.message );
+	}
+};
+
+export { apolloClient, GraphQLErrorHandler, GraphQLResponseHandler };
+

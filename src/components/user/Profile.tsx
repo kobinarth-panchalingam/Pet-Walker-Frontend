@@ -1,7 +1,7 @@
 import React from 'react';
 import { GET_USER, UPDATE_USER } from '@api';
-import { useMutation, useQuery } from '@apollo/client';
-import { formatDateOnly, getChangedFields, RESTErrorHandler } from '@utils';
+import { ApolloError, useMutation, useQuery } from '@apollo/client';
+import { getChangedFields, GraphQLErrorHandler, GraphQLResponseHandler } from '@utils';
 
 import profile from '../../assets/images/profile.png';
 import ErrorComponent from '../common/ErrorComponent';
@@ -9,13 +9,14 @@ import { Form } from '../common/Form';
 import LoadingIndicator from '../common/LoadingIndicator';
 
 const Profile: React.FC = () => {
-	const { data, loading: getUserLoading, error } = useQuery( GET_USER );
+	const { data, loading: getUserLoading, error: getUserError, refetch } = useQuery( GET_USER );
+
 	const user = data?.getUser;
 	const initialFormData = {
 		firstName: user?.firstName,
 		lastName: user?.lastName || undefined,
 		phoneNumber: user?.phoneNumber || undefined,
-		dob: user?.dob ? formatDateOnly( user?.dob ) : undefined, // TODO: return date in correct format
+		dob: user?.dob || undefined,
 		email: user?.email,
 		profilePhoto: user?.profilePhoto || profile,
 		street: user?.street || undefined,
@@ -29,11 +30,14 @@ const Profile: React.FC = () => {
 
 	const handleSubmit = async( formData:any ) => {
 		try {
-			updateUser( { variables: {
-				input: getChangedFields( initialFormData, formData )
-			} } );
+			const { data } = await updateUser( {
+				variables: {
+					input: getChangedFields( initialFormData, formData )
+				} } );
+			GraphQLResponseHandler( data?.updateUser );
+			refetch();
 		} catch ( error ) {
-			RESTErrorHandler( error ); // TODO: create graphql error handler
+			GraphQLErrorHandler( error as ApolloError );
 		}
 	};
 
@@ -41,8 +45,8 @@ const Profile: React.FC = () => {
 		return <LoadingIndicator />;
 	}
 
-	if ( error ) {
-		return <ErrorComponent error={error} />;
+	if ( getUserError ) {
+		return <ErrorComponent error={getUserError} />;
 	}
 
 	return (

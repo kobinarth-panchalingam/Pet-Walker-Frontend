@@ -48,6 +48,12 @@ body {
   }
 }
 
+.mobile-full-width {
+  @media (max-width: 576px) {
+    width: 100%;
+  }
+}
+
 hr {
   border-color: $primary-color;
 }
@@ -78,6 +84,8 @@ h6,
 }
 
 .navbar {
+  box-shadow: 0 2px 4px 0 rgba($primary-color, 0.2);
+
   .navbar-brand {
     color: $primary-color;
     font-weight: 400;
@@ -112,7 +120,7 @@ h6,
 }
 
 .Toastify__toast-container--top-right {
-  margin-top: 42px;
+  margin-top: 46px;
 
   @media (max-width: 576px) {
     margin-top: 20px;
