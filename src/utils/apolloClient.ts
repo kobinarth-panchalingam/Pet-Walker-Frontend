@@ -28,7 +28,18 @@ const httpLink = new HttpLink( {
 
 const apolloClient = new ApolloClient( {
 	link: from( [ authLink, removeTypenameLink, httpLink ] ),
-	cache: new InMemoryCache()
+	cache: new InMemoryCache(),
+	defaultOptions: {
+		watchQuery: {
+			fetchPolicy: 'no-cache'
+		},
+		query: {
+			fetchPolicy: 'no-cache'
+		},
+		mutate: {
+			fetchPolicy: 'no-cache'
+		}
+	}
 } );
 
 const GraphQLErrorHandler = ( error: ApolloError ) => {

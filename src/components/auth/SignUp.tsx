@@ -14,6 +14,7 @@ const SignUp: React.FC = () => {
 
 	const [ formData, setFormData ] = useState( data );
 	const [ isFormValid, setIsFormValid ] = useState( true );
+	const [ isLoading, setIsLoading ] = useState( false );
 
 	const onChange = ( { data, errors }:any ) => {
 		setFormData( data );
@@ -21,6 +22,7 @@ const SignUp: React.FC = () => {
 	};
 
 	const handleSubmit = async( event: React.FormEvent ) => {
+		setIsLoading( true );
 		event.preventDefault();
 		try {
 			const res = await signUp( formData );
@@ -28,6 +30,8 @@ const SignUp: React.FC = () => {
 			navigate( HOME );
 		} catch ( error ) {
 			RESTErrorHandler( error );
+		} finally {
+			setIsLoading( false );
 		}
 	};
 
@@ -38,7 +42,9 @@ const SignUp: React.FC = () => {
 				<form onSubmit={handleSubmit}>
 					<CustomJsonForms schema={schema} uischema={uischema} data={formData} onChange={onChange} />
 					<div className="mt-2 mb-4">
-						<button type="submit" className="btn btn-primary w-100" disabled={!isFormValid}>Sign Up</button>
+						<button type="submit" className="btn btn-primary w-100" disabled={!isFormValid}>
+							{ isLoading ? 'Signing Up...' : 'Sign Up' }
+						</button>
 					</div>
 					<hr className="my-3" />
 					<div className="mt-2">

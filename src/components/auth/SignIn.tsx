@@ -11,8 +11,10 @@ import CustomJsonForms from '../jsonforms/CustomJsonForms';
 const SignIn: React.FC = () => {
 	const { login } = useAuth();
 	const navigate = useNavigate();
+
 	const [ formData, setFormData ] = useState( data );
 	const [ isFormValid, setIsFormValid ] = useState( true );
+	const [ isLoading, setIsLoading ] = useState( false );
 
 	const onChange = ( { data, errors }:any ) => {
 		setFormData( data );
@@ -20,6 +22,7 @@ const SignIn: React.FC = () => {
 	};
 
 	const handleSubmit = async( event: React.FormEvent ) => {
+		setIsLoading( true );
 		event.preventDefault();
 		try {
 			const res = await signIn( formData );
@@ -27,6 +30,8 @@ const SignIn: React.FC = () => {
 			navigate( HOME );
 		} catch ( error ) {
 			RESTErrorHandler( error );
+		} finally {
+			setIsLoading( false );
 		}
 	};
 
@@ -40,7 +45,9 @@ const SignIn: React.FC = () => {
 						<a href="#" className="text-decoration-none">Forgot Password?</a>
 					</div>
 					<div className="mt-2 mb-4">
-						<button type="submit" className="btn btn-primary w-100" disabled={!isFormValid}>Sign In</button>
+						<button type="submit" className="btn btn-primary w-100" disabled={!isFormValid}>
+							{ isLoading ? 'Signing In...' : 'Sign In' }
+						</button>
 					</div>
 					<hr className="my-3" />
 					<div className="mt-2">
