@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { GET_USER, UPDATE_USER } from '@api';
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { getChangedFields, GraphQLErrorHandler, GraphQLResponseHandler } from '@utils';
 
 import profile from '../../assets/images/profile.png';
-import ErrorComponent from '../common/ErrorComponent';
+import { ErrorComponent } from '../common/ErrorComponent';
 import { Form } from '../common/Form';
-import LoadingIndicator from '../common/LoadingIndicator';
+import { LoadingIndicator } from '../common/LoadingIndicator';
 
 const Profile: React.FC = () => {
 	const { data, loading: getUserLoading, error: getUserError, refetch } = useQuery( GET_USER );
 
 	const user = data?.getUser;
-	const initialFormData = {
+	const initialFormData = useMemo( () => ( {
 		firstName: user?.firstName,
 		lastName: user?.lastName || undefined,
 		phoneNumber: user?.phoneNumber || undefined,
@@ -24,7 +24,7 @@ const Profile: React.FC = () => {
 		district: user?.district || undefined,
 		zipCode: user?.zipCode || undefined,
 		emergencyContacts: user?.emergencyContacts || []
-	};
+	} ), [ user ] );
 
 	const [ updateUser, { loading: updateUserLoading } ] = useMutation( UPDATE_USER );
 
@@ -50,10 +50,8 @@ const Profile: React.FC = () => {
 	}
 
 	return (
-		<div className="d-flex row w-100 justify-content-center text-start">
-			<div className="py-4 px-0">
-				<Form schema={schema} uischema={uischema} data={initialFormData} handleSubmit={handleSubmit} isLoading={updateUserLoading} />
-			</div>
+		<div className="d-flex justify-content-center align-items-center w-100 py-3">
+			<Form schema={schema} uischema={uischema} data={initialFormData} handleSubmit={handleSubmit} isLoading={updateUserLoading} />
 		</div>
 	);
 };
@@ -61,34 +59,83 @@ const Profile: React.FC = () => {
 const schema = {
 	type: 'object',
 	properties: {
-		firstName: { type: 'string', title: 'First Name' },
-		lastName: { type: 'string', title: 'Last Name' },
-		email: { type: 'string', format: 'email', title: 'Email' },
-		phoneNumber: { type: 'string', title: 'Phone Number', pattern: '^\\(?([0-9]{3})\\)?[- ]?([0-9]{3})[- ]?([0-9]{4})$' },
-		dob: { type: 'string', format: 'date', title: 'Date of Birth' },
-		profilePhoto: { type: 'string', title: 'Profile Photo' },
-		street: { type: 'string', title: 'Street' },
-		city: { type: 'string', title: 'City' },
-		district: { type: 'string', title: 'District' },
-		zipCode: { type: 'string', title: 'Zip Code', pattern: '^[0-9]{5}$', minLength: 5, maxLength: 5 },
+		firstName: {
+			type: 'string',
+			title: 'First Name'
+		},
+		lastName: {
+			type: 'string',
+			title: 'Last Name'
+		},
+		email: {
+			type: 'string',
+			title: 'Email',
+			format: 'email'
+		},
+		phoneNumber: {
+			type: 'string',
+			title: 'Phone Number',
+			pattern: '^\\(?([0-9]{3})\\)?[- ]?([0-9]{3})[- ]?([0-9]{4})$'
+		},
+		dob: {
+			type: 'string',
+			format: 'date',
+			title: 'Date of Birth'
+		},
+		profilePhoto: {
+			type: 'string',
+			title: 'Profile Photo'
+		},
+		street: {
+			type: 'string',
+			title: 'Street'
+		},
+		city: {
+			type: 'string',
+			title: 'City'
+		},
+		district: {
+			type: 'string',
+			title: 'District'
+		},
+		zipCode: {
+			type: 'string',
+			title: 'Zip Code',
+			pattern: '^[0-9]{5}$',
+			minLength: 5,
+			maxLength: 5
+		},
 		emergencyContacts: {
 			type: 'array',
 			title: 'Emergency Contacts',
 			items: {
 				type: 'object',
 				properties: {
-					name: { type: 'string', title: 'Contact Name' },
+					name: {
+						type: 'string',
+						title: 'Contact Name'
+					},
 					phoneNumber: {
 						type: 'string',
 						title: 'Contact Phone Number',
 						pattern: '^\\(?([0-9]{3})\\)?[- ]?([0-9]{3})[- ]?([0-9]{4})$'
 					}
 				},
-				required: [ 'name', 'phoneNumber' ]
+				required: [
+					'name',
+					'phoneNumber'
+				]
 			}
 		}
 	},
-	required: [ 'firstName', 'phoneNumber', 'street', 'city', 'district', 'zipCode' ]
+	required: [
+		'firstName',
+		'phoneNumber',
+		'street',
+		'city',
+		'district',
+		'zipCode'
+	]
 };
 
 const uischema = {

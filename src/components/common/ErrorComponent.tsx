@@ -14,4 +14,4 @@ const ErrorComponent: React.FC<ErrorComponentProps> = ( { error } ) => {
 	);
 };
 
-export default ErrorComponent;
+export { ErrorComponent };

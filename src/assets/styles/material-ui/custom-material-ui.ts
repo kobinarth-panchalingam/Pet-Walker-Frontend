@@ -4,11 +4,11 @@ import variables from '../variables.module.scss';
 
 export const customizedTheme = createTheme( {
 	components: {
-		MuiTextField: {
-			defaultProps: {
-				variant: 'outlined'
-			}
-		},
+		// MuiTextField: {
+		// 	defaultProps: {
+		// 		variant: 'outlined'
+		// 	}
+		// },
 		MuiOutlinedInput: {
 			styleOverrides: {
 				input: {
@@ -17,6 +17,12 @@ export const customizedTheme = createTheme( {
 						'-webkit-text-fill-color': `${variables.textColor} !important`
 					}
 				}
+			}
+		},
+		MuiFormControl: {
+			defaultProps: {
+				variant: 'standard',
+				margin: 'dense'
 			}
 		}
 	},

@@ -6,7 +6,7 @@ import { useAuth } from '@hooks/UseAuth';
 import { SignUpData } from '@types';
 import { RESTErrorHandler } from '@utils';
 
-import CustomJsonForms from '../jsonforms/CustomJsonForms';
+import { CustomJsonForms } from '../jsonforms/CustomJsonForms';
 
 const SignUp: React.FC = () => {
 	const { login } = useAuth();
@@ -36,13 +36,13 @@ const SignUp: React.FC = () => {
 	};
 
 	return (
-		<div className="d-flex justify-content-center row w-100 text-center">
+		<div className="d-flex justify-content-center align-items-center w-100 text-center">
 			<div className="card p-4 p-0 col-12 col-md-8 col-lg-6">
 				<h2 className="mb-4">Sign Up</h2>
 				<form onSubmit={handleSubmit}>
 					<CustomJsonForms schema={schema} uischema={uischema} data={formData} onChange={onChange} />
 					<div className="mt-2 mb-4">
-						<button type="submit" className="btn btn-primary w-100" disabled={!isFormValid}>
+						<button type="submit" className="btn btn-primary w-100" disabled={!isFormValid || isLoading}>
 							{ isLoading ? 'Signing Up...' : 'Sign Up' }
 						</button>
 					</div>

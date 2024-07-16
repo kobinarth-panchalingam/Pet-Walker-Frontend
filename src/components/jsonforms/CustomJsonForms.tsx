@@ -32,4 +32,4 @@ const CustomJsonForms = ( { schema, uischema, data, readonly, onChange }: Custom
 	);
 };
 
-export default CustomJsonForms;
+export { CustomJsonForms };
