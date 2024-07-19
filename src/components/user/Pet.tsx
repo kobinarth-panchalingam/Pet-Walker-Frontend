@@ -1,24 +1,22 @@
-import React, { useMemo } from 'react';
-import { GET_USER, UPDATE_USER } from '@api';
-import { ApolloError, useMutation, useQuery } from '@apollo/client';
-import { getChangedFields, GraphQLErrorHandler, GraphQLResponseHandler } from '@utils';
-import { options } from 'node_modules/axios/index.d.cts';
+import React from 'react';
 
-import profile from '../../assets/images/profile.png';
-import { ErrorComponent } from '../common/ErrorComponent';
+// import {  UPDATE_USER } from '@api';
+// import { ApolloError, useMutation, useQuery } from '@apollo/client';
+// import { getChangedFields, GraphQLErrorHandler, GraphQLResponseHandler } from '@utils';
+// import { options } from 'node_modules/axios/index.d.cts';
+// import profile from '../../assets/images/profile.png';
+// import { ErrorComponent } from '../common/ErrorComponent';
 import { Form } from '../common/Form';
-import { LoadingIndicator } from '../common/LoadingIndicator';
+// import { LoadingIndicator } from '../common/LoadingIndicator';
 
 const Pet: React.FC = () => {
 	// const { data, loading: getUserLoading, error: getUserError, refetch } = useQuery( GET_USER );
 	const data = {
-		spayedNeutered: 'Yes',
-		feedingSchedule: 'Custom',
-		customFeedingSchedule: 'Custom Feeding Schedule Details'
 	};
-	const [ updateUser, { loading: updateUserLoading } ] = useMutation( UPDATE_USER );
+	// const [ updateUser, { loading: updateUserLoading } ] = useMutation( UPDATE_USER );
 
 	const handleSubmit = async( formData:any ) => {
+		console.log( formData );
 		// try {
 		// 	const { data } = await updateUser( {
 		// 		variables: {
@@ -41,7 +39,7 @@ const Pet: React.FC = () => {
 
 	return (
 		<div className="d-flex justify-content-center align-items-center w-100 py-3">
-			<Form schema={schema( [ 'a' ] )} uischema={uischema} data={data} handleSubmit={handleSubmit} isLoading={updateUserLoading} />
+			<Form schema={schema( [ 'a' ] )} uischema={uischema} data={data} handleSubmit={handleSubmit} isLoading={false} />
 		</div>
 	);
 };
@@ -49,6 +47,10 @@ const Pet: React.FC = () => {
 const schema = ( breeds: string[] ) => ( {
 	type: 'object',
 	properties: {
+		photo: {
+			type: 'string',
+			title: 'Photo'
+		},
 		petType: {
 			type: 'string',
 			title: 'Pet Type',
@@ -78,11 +80,16 @@ const schema = ( breeds: string[] ) => ( {
 			maximum: 11
 		},
 		gender: {
-			type: 'string',
 			title: 'Gender',
-			enum: [
-				'Male',
-				'Female'
+			oneOf: [
+				{
+					const: 'MALE',
+					title: 'Male'
+				},
+				{
+					const: 'FEMALE',
+					title: 'Female'
+				}
 			]
 		},
 		weight: {
@@ -92,49 +99,144 @@ const schema = ( breeds: string[] ) => ( {
 		spayedNeutered: {
 			type: 'string',
 			title: 'Spayed/Neutered',
-			enum: [
-				'Yes',
-				'No'
+			oneOf: [
+				{
+					const: 'YES',
+					title: 'Yes'
+				},
+				{
+					const: 'NO',
+					title: 'No'
+				}
 			]
 		},
 		vaccinated: {
 			type: 'string',
 			title: 'Vaccinated',
-			enum: [
-				'Yes',
-				'No'
+			oneOf: [
+				{
+					const: 'YES',
+					title: 'Yes'
+				},
+				{
+					const: 'NO',
+					title: 'No'
+				}
 			]
 		},
-		specialRequirements: {
+		energyLevel: {
 			type: 'string',
-			title: 'Special Requirements'
-		},
-		photo: {
-			type: 'string',
-			title: 'Photo'
+			title: 'Energy Level',
+			oneOf: [
+				{
+					const: 'LOW',
+					title: 'Low'
+				},
+				{
+					const: 'MEDIUM',
+					title: 'Medium'
+				},
+				{
+					const: 'HIGH',
+					title: 'High'
+				}
+			]
 		},
 		preferredWalkingSchedule: {
 			type: 'array',
 			title: 'Preferred Walking Schedule',
 			items: {
 				type: 'string',
-				enum: [
-					'Morning',
-					'Afternoon',
-					'Evening',
-					'Night'
+				oneOf: [
+					{
+						const: 'MORNING',
+						title: 'Morning'
+					},
+					{
+						const: 'AFTERNOON',
+						title: 'Afternoon'
+					},
+					{
+						const: 'EVENING',
+						title: 'Evening'
+					},
+					{
+						const: 'NIGHT',
+						title: 'Night'
+					}
 				]
 			},
+			minItems: 1,
 			uniqueItems: true
 		},
-		activityLevel: {
+		feedingSchedule: {
+			type: 'object',
+			properties: {
+				value: {
+					type: 'string',
+					title: 'Feeding Schedule',
+					oneOf: [
+						{
+							const: 'MORNING',
+							title: 'Morning'
+						},
+						{
+							const: 'TWICE_A_DAY',
+							title: 'Twice a Day'
+						},
+						{
+							const: 'CUSTOM',
+							title: 'Custom',
+							description: 'Specify the custom feeding schedule.'
+						}
+					]
+				},
+				additionalDetails: {
+					type: 'string',
+					title: 'Custom Feeding Schedule Details',
+					description: 'Specify the custom feeding schedule.'
+				}
+			}
+		},
+		pottyBreakSchedule: {
+			type: 'object',
+			properties: {
+				value: {
+					type: 'string',
+					title: 'Potty Break Schedule',
+					oneOf: [
+						{
+							const: 'EVERY_HOUR',
+							title: 'Every Hour'
+						},
+						{
+							const: 'TWO_HOURS',
+							title: '2 Hours'
+						},
+						{
+							const: 'FOUR_HOURS',
+							title: '4 Hours'
+						},
+						{
+							const: 'EIGHT_HOURS',
+							title: '8 Hours'
+						},
+						{
+							const: 'CUSTOM',
+							title: 'Custom'
+						}
+					]
+				},
+				additionalDetails: {
+					type: 'string',
+					title: 'Custom Potty Break Schedule Details',
+					description: 'Specify the custom potty break schedule.'
+				}
+			}
+		},
+		specialRequirements: {
 			type: 'string',
-			title: 'Activity Level',
-			enum: [
-				'Low',
-				'Medium',
-				'High'
-			]
+			title: 'Special Requirements'
 		},
 		dietaryRestrictions: {
 			type: 'string',
@@ -143,49 +245,21 @@ const schema = ( breeds: string[] ) => ( {
 		behavioralTraits: {
 			type: 'string',
 			title: 'Behavioral Traits'
-		},
-		feedingSchedule: {
-			type: 'string',
-			title: 'Feeding Schedule',
-			enum: [
-				'Morning',
-				'Twice a Day',
-				'Custom'
-			]
-		},
-		customFeedingSchedule: {
-			type: 'string',
-			title: 'Custom Feeding Schedule Details',
-			description: 'Specify the custom feeding schedule.'
-		},
-		pottyBreakSchedule: {
-			type: 'string',
-			title: 'Potty Break Schedule',
-			enum: [
-				'Every Hour',
-				'2 Hours',
-				'4 Hours',
-				'8 Hours',
-				'Custom'
-			],
-			default: 'Every Hour'
-		},
-		customPottyBreakSchedule: {
-			type: 'string',
-			title: 'Custom Potty Break Schedule Details',
-			description: 'Specify the custom potty break schedule.'
 		}
 	},
 	required: [
-		'petName',
 		'petType',
+		'petName',
 		'breed',
-		'age',
-		'gender',
+		'ageYears',
+		'ageMonths',
 		'weight',
-		'color',
+		'gender',
 		'spayedNeutered',
-		'vaccinated'
+		'vaccinated',
+		'energyLevel',
+		'preferredWalkingSchedule',
+		'feedingSchedule'
 	]
 } );
 
@@ -284,6 +358,13 @@ const uischema = {
 					options: {
 						format: 'radio'
 					}
+				},
+				{
+					type: 'Control',
+					scope: '#/properties/energyLevel',
+					options: {
+						format: 'radio'
+					}
 				}
 			]
 		},
@@ -297,37 +378,37 @@ const uischema = {
 				},
 				{
 					type: 'Control',
-					scope: '#/properties/feedingSchedule',
-					options: {
-						'format': 'radio'
-					}
-				},
-				{
-					type: 'Control',
-					scope: '#/properties/customFeedingSchedule',
-					rule: {
-						effect: 'SHOW',
-						condition: {
-							scope: '#/properties/feedingSchedule',
-							schema: { const: 'Custom' }
-						}
-					}
-				},
-				{
-					type: 'Control',
-					scope: '#/properties/pottyBreakSchedule',
+					scope: '#/properties/feedingSchedule/properties/value',
 					options: {
 						format: 'radio'
 					}
 				},
 				{
 					type: 'Control',
-					scope: '#/properties/customPottyBreakSchedule',
+					scope: '#/properties/feedingSchedule/properties/additionalDetails',
 					rule: {
 						effect: 'SHOW',
 						condition: {
-							scope: '#/properties/pottyBreakSchedule',
-							schema: { const: 'Custom' }
+							scope: '#/properties/feedingSchedule/properties/value',
+							schema: { const: 'CUSTOM' }
+						}
+					}
+				},
+				{
+					type: 'Control',
+					scope: '#/properties/pottyBreakSchedule/properties/value',
+					options: {
+						format: 'radio'
+					}
+				},
+				{
+					type: 'Control',
+					scope: '#/properties/pottyBreakSchedule/properties/additionalDetails',
+					rule: {
+						effect: 'SHOW',
+						condition: {
+							scope: '#/properties/pottyBreakSchedule/properties/value',
+							schema: { const: 'CUSTOM' }
 						}
 					}
 				}

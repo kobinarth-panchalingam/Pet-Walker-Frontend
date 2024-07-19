@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
-import { HOME, PET, PETS, PROFILE, SIGN_IN, SIGN_UP } from '@constants/routes';
+import { HOME, PETS, PROFILE, SIGN_IN, SIGN_UP } from '@constants/routes';
 import { useAuth } from '@hooks/UseAuth';
 
 import { SignIn } from './components/auth/SignIn';

@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
+import { ControlProps } from '@jsonforms/core';
 import { withJsonFormsControlProps } from '@jsonforms/react';
 import DeleteIcon from '@mui/icons-material/Delete'; // Import the delete icon
 import { Button, InputLabel } from '@mui/material';
 
-interface FileUploadControlProps {
+interface FileUploadControlProps extends ControlProps {
 	data: any;
 	handleChange: ( path: string, value: any ) => void;
 	path: string;
@@ -11,7 +12,7 @@ interface FileUploadControlProps {
 	accept?: string;
 }
 
-const FileUploadControl = ( { data, handleChange, path, label, accept }: FileUploadControlProps ) => {
+const FileUploadControl: React.FC<FileUploadControlProps> = ( { data, handleChange, path, label, accept } ) => {
 	const fileInputRef = useRef<HTMLInputElement>( null );
 
 	const onFileChange = ( event: React.ChangeEvent<HTMLInputElement> ) => {
@@ -70,4 +71,4 @@ const FileUploadControl = ( { data, handleChange, path, label, accept }: FileUpl
 	);
 };
 
-export default withJsonFormsControlProps( FileUploadControl );
+export default withJsonFormsControlProps( FileUploadControl as React.FC<ControlProps> );
